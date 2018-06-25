@@ -1,0 +1,51 @@
+{
+    "name": "rpn-multitool",
+    "version": "1.4.1",
+    "description": "invoice generator",
+    "main": "main/bundle.js",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/WMXPY/p6.git"
+    },
+    "keywords": [],
+    "license": "PRIVATE",
+    "author": "WMXPY",
+    "bugs": {
+        "url": "https://github.com/WMXPY/p6/issues"
+    },
+    "build": {
+        "productName": "rpn multitool",
+        "appId": "com.songshu.p6",
+        "copyright": "Copyright © 2018 WMXPY",
+        "files": [
+            "main",
+            "renderer",
+            "navigator",
+            "package.json",
+            "anotherone",
+            "editparser",
+            "lib",
+            "renderer/index.html"
+        ],
+        "directories": {
+            "buildResources": "/../"
+        },
+        "mac": {
+            "target": "dmg",
+            "type": "distribution",
+            "category": "efficiency",
+            "icon": "../public/logoTemp.png"
+        },
+        "win": {
+            "target": "nsis",
+            "icon": "../public/logoTemp.png"
+        },
+        "linux": {
+            "target": "AppImage",
+            "category": "efficiency",
+            "icon": "../public/logoTemp.png"
+        }
+    },
+    "homepage": "https://github.com/WMXPY/p6#readme"
+}

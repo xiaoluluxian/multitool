@@ -1,0 +1,28 @@
+{
+    "type": "project",
+    "template": "react",
+    "sub": "electron",
+    "version": "3.3.1-fix.0",
+    "title": "p6",
+    "description": "invoice generator",
+    "author": "WMXPY",
+    "config": {
+        "router": {
+            "router": "react-router-dom",
+            "config": {
+                "router": "browser-router"
+            }
+        },
+        "pack": "webpack",
+        "test": {
+            "test": "mocha",
+            "expect": "code",
+            "render": "enzyme"
+        },
+        "style": "sass",
+        "sub": "typescript"
+    },
+    "underline": {
+        "active": false
+    }
+}
