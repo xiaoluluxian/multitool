@@ -334,6 +334,10 @@ export class Edit extends React.Component<IProps, {}> {
                         }}>
                             <th style={{
                                 padding: "3px",
+                            }}>Action
+                            </th>
+                            <th style={{
+                                padding: "3px",
                             }}>Item
                             </th>
                             <th style={{
