@@ -127,87 +127,87 @@ export class Edit extends React.Component<IProps, {}> {
                         borderCollapse: 'collapse',
                     }}>
                         <tbody>
-                        <tr style={{
-            border: "1px solid black",
-        }}>
-        <tr>
-            <td style={{
-                border: "1px solid black",
-                padding: '4px',
-                textAlign: 'right',
-            }}>Year Built</td>
-            <td style={{
-                border: "1px solid black",
-                padding: '4px',
-            }}><input value={this.props.content.year} onChange={(event) => {
-                const current = this.props.content;
-                current.year = event.target.value;
-                
-                this.props.updateContent(current);
-                setTimeout(() => {
-                    console.log(this.props.content);
-                }, 100);
-               
-            }} /></td></tr>
-            <tr>
-             <td style={{
-                border: "1px solid black",
-                padding: '4px',
-                textAlign: 'right',
-            }}>Stories</td>
-            <td style={{
-                border: "1px solid black",
-                padding: '4px',
-            }}><input value={this.props.content.stories} onChange={(event) => {
-                const current = this.props.content;
-                current.stories = event.target.value;
-                
-                this.props.updateContent(current);
-                setTimeout(() => {
-                    console.log(this.props.content);
-                }, 100);
-               
-            }} /></td></tr>
-            <tr>
-             <td style={{
-                border: "1px solid black",
-                padding: '4px',
-                textAlign: 'right',
-            }}>Living Area</td>
-            <td style={{
-                border: "1px solid black",
-                padding: '4px',
-            }}><input value={this.props.content.area} onChange={(event) => {
-                const current = this.props.content;
-                current.area = event.target.value;
-                
-                this.props.updateContent(current);
-                setTimeout(() => {
-                    console.log(this.props.content);
-                }, 100);
-               
-            }} /></td></tr>
-            <tr>
-             <td style={{
-                border: "1px solid black",
-                padding: '4px',
-                textAlign: 'right',
-            }}>Total Cost</td>
-            <td style={{
-                border: "1px solid black",
-                padding: '4px',
-            }}><input value={this.props.content.totalCost} onChange={(event) => {
-                const current = this.props.content;
-                current.totalCost = event.target.value;
-                
-                
-                this.props.updateContent(current);
-                setTimeout(() => {
-                    console.log(this.props.content);
-                }, 100);
-               
-            }} /></td></tr>
-        </tr>
+                            <tr style={{
+                                border: "1px solid black",
+                            }}>
+                                <tr>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                        textAlign: 'right',
+                                    }}>Year Built</td>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                    }}><input value={this.props.content.year} onChange={(event) => {
+                                        const current = this.props.content;
+                                        current.year = event.target.value;
+
+                                        this.props.updateContent(current);
+                                        setTimeout(() => {
+                                            console.log(this.props.content);
+                                        }, 100);
+
+                                    }} /></td></tr>
+                                <tr>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                        textAlign: 'right',
+                                    }}>Stories</td>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                    }}><input value={this.props.content.stories} onChange={(event) => {
+                                        const current = this.props.content;
+                                        current.stories = event.target.value;
+
+                                        this.props.updateContent(current);
+                                        setTimeout(() => {
+                                            console.log(this.props.content);
+                                        }, 100);
+
+                                    }} /></td></tr>
+                                <tr>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                        textAlign: 'right',
+                                    }}>Living Area</td>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                    }}><input value={this.props.content.area} onChange={(event) => {
+                                        const current = this.props.content;
+                                        current.area = event.target.value;
+
+                                        this.props.updateContent(current);
+                                        setTimeout(() => {
+                                            console.log(this.props.content);
+                                        }, 100);
+
+                                    }} /></td></tr>
+                                <tr>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                        textAlign: 'right',
+                                    }}>Total Cost</td>
+                                    <td style={{
+                                        border: "1px solid black",
+                                        padding: '4px',
+                                    }}><input value={this.props.content.totalCost} onChange={(event) => {
+                                        const current = this.props.content;
+                                        current.totalCost = event.target.value;
+
+
+                                        this.props.updateContent(current);
+                                        setTimeout(() => {
+                                            console.log(this.props.content);
+                                        }, 100);
+
+                                    }} /></td></tr>
+                            </tr>
                         </tbody>
                     </table>
                 </div>
@@ -284,7 +284,7 @@ export class Edit extends React.Component<IProps, {}> {
                 setTimeout(() => {
                     console.log(this.props.content);
                 }, 100);
-               
+
             }} /></td>
         </tr>);
     }
@@ -335,8 +335,6 @@ export class Edit extends React.Component<IProps, {}> {
                             <th style={{
                                 padding: "3px",
                             }}>Item
-                            
-                            
                             </th>
                             <th style={{
                                 padding: "3px",
@@ -356,7 +354,13 @@ export class Edit extends React.Component<IProps, {}> {
                         </tr>
                     </thead>
                     <tbody>
-                        {value.each.map(this.mapStuff)}
+                        {(() => {
+                            let temp = [];
+                            for (let i = 0; i < value.each.length; i++) {
+                                temp.push(this.mapStuff(value.each[i], i, value.cate));
+                            }
+                            return temp;
+                        })()}
                         <tr style={{
                             borderBottom: "1px solid black",
                         }}>
@@ -476,10 +480,19 @@ export class Edit extends React.Component<IProps, {}> {
         return pictureList;
     }
 
-    protected mapStuff(value: IEach, index: number) {
+    protected mapStuff(value: IEach, index: number, category: string) {
 
         return (<React.Fragment key={index}>
             <tr key={value.item}>
+                <td><button onClick={() => {
+                    let temp = this.props.content;
+                    for (let i of temp.list) {
+                        if (i.cate === category) {
+                            i.each.splice(index, 1);
+                        }
+                    }
+                    this.props.updateContent(temp);
+                }}>123</button></td>
                 <td style={{
                     maxWidth: '30px',
                     padding: '3px',
