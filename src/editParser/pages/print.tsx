@@ -353,7 +353,6 @@ export class Print extends React.Component<IProps, {}> {
     }
 
     protected mapStuff(value: IEach, index: number) {
-
         return (<React.Fragment key={index}>
             <tr key={value.item}>
                 <td style={{

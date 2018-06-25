@@ -59,20 +59,20 @@ class Root extends React.Component<{}, IState> {
                     <Dropper onDrop={this.onDrop} onLoad={this.onLoad} />
                 </div>);
             case 'export':
-                if(this.$){
+                if (this.$) {
                     return (<div className="entire theme-bg">
-                    <Edit 
-                        content={this.state.inner} 
-                        repairBaseId={this.state.repairBaseId}
-                        updateContent={(content: IParsed)=>{
-                            this.setState({
-                                inner: content,
-                            });
-                        }}/>
-                </div>);
-                }else{
+                        <Edit
+                            content={this.state.inner}
+                            repairBaseId={this.state.repairBaseId}
+                            updateContent={(content: IParsed) => {
+                                this.setState({
+                                    inner: content,
+                                });
+                            }} />
+                    </div>);
+                } else {
                     return (<div className="entire theme-bg">
-                    Hello
+                        Hello
                 </div>);
                 }
             default:
@@ -120,7 +120,7 @@ class Root extends React.Component<{}, IState> {
 
         let pictList: string[] = [];
         let fullPickList: string[] = [];
-        
+
         const filePath = this.state.filePath;
         let stat = fs.statSync(filePath);
 
@@ -297,7 +297,7 @@ class Root extends React.Component<{}, IState> {
         </div>);
     }
 
-   
+
 
     protected getTr(name: string, info: string, bold?: boolean) {
         return (<tr>
