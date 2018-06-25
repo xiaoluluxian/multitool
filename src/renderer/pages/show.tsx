@@ -20,6 +20,10 @@ export interface IProps {
     noPicture?: boolean;
     isPrint?: boolean;
 }
+
+export interface IState {
+    mode: 'invoice' | 'workorder';
+}
 /**
          * FOR MAINTAINER
          * MAKE SURE THIS part is not editable
@@ -50,10 +54,13 @@ const s = {
     },
 };
 
-class Show extends React.Component<IProps, {}> {
+class Show extends React.Component<IProps, IState> {
     public constructor(props) {
         super(props);
         this.mapItem = this.mapItem.bind(this);
+        this.state = {
+            mode: 'invoice',
+        };
     }
 
     public render(): JSX.Element {
@@ -70,10 +77,16 @@ class Show extends React.Component<IProps, {}> {
         total += tax;
 
         return (<div>
+            <button onClick={() => {
+                this.setState({
+                    mode: (this.state.mode === 'invoice') ? 'workorder' : 'invoice',
+                });
+            }}></button>
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
                 height: '100px',
+                backgroundColor: this.state.mode === 'invoice' ? 'red' : 'blue',
                 alignItems: 'center',
             }}>
                 <img src={logo} alt="logo" style={{
