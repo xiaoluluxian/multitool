@@ -14,15 +14,19 @@ import * as fs from 'fs';
 import * as path from 'path';
 import logo from './logo';
 
+export type TMode = 'invoice' | 'workorder';
+
 export interface IProps {
     page: IPage;
+    mode: TMode;
     updatePage?: (page: IPage) => void;
+    upgradeMode?: (mode: TMode) => void;
     noPicture?: boolean;
     isPrint?: boolean;
 }
 
 export interface IState {
-    mode: 'invoice' | 'workorder';
+    mode: TMode;
 }
 /**
          * FOR MAINTAINER
@@ -58,6 +62,9 @@ class Show extends React.Component<IProps, IState> {
     public constructor(props) {
         super(props);
         this.mapItem = this.mapItem.bind(this);
+        this.change = this.change.bind(this);
+
+        this.displayT = this.displayT.bind(this);
         this.state = {
             mode: 'invoice',
         };
@@ -77,16 +84,12 @@ class Show extends React.Component<IProps, IState> {
         total += tax;
 
         return (<div>
-            <button onClick={() => {
-                this.setState({
-                    mode: (this.state.mode === 'invoice') ? 'workorder' : 'invoice',
-                });
-            }}></button>
+            {this.props.isPrint?void 0:<button id="change status" onClick={this.change}></button>}
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
                 height: '100px',
-                backgroundColor: this.state.mode === 'invoice' ? 'red' : 'blue',
+                //backgroundColor: this.state.mode === 'invoice' ? 'red' : 'blue',
                 alignItems: 'center',
             }}>
                 <img src={logo} alt="logo" style={{
@@ -104,13 +107,14 @@ class Show extends React.Component<IProps, IState> {
                 }}>
                     Repair and Preservation Network, LLC
                 </div>
-                <div style={{
+                <div id="text status" style={{
                     width: '30%',
                     fontSize: '45px',
                     fontWeight: 'bold',
                     color: 'lightblue',
                     textAlign: 'center',
-                }}>INVOICE</div>
+                    
+                }}>{this.props.mode === 'invoice'?"INVOICE": "WORK ORDER"}</div>
             </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 3 }}>
@@ -119,35 +123,7 @@ class Show extends React.Component<IProps, IState> {
                     Phone: (646)-568-0008
                 </div>
                 <div style={{ flex: 2 }}>
-                    <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                        <tbody>
-                            <tr>
-                                <td style={(s.td as any)}>
-                                    Invoice Number
-                                </td>
-                                <td style={(s.td as any)}>
-                                    {this.props.page.invoice}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={(s.td as any)}>
-                                    Completion Date
-                                </td>
-                                <td style={(s.td as any)}>
-                                    {this.parseDate(this.props.page.completionDate)}
-                                </td>
-
-                            </tr>
-                            <tr>
-                                <td style={(s.td as any)}>
-                                    Invoice Date
-                                </td>
-                                <td style={(s.td as any)}>
-                                    {this.parseDate(this.props.page.invoiceDate)}
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    {this.displayT()}
                 </div>
             </div>
             <table style={{
@@ -302,6 +278,46 @@ class Show extends React.Component<IProps, IState> {
         let base64Image: string = new Buffer(bitmap).toString('base64');
         let imgSrcString: string = `data:image/${extensionName.split('.').pop()};base64,${base64Image}`;
         return imgSrcString;
+    }
+    protected change() 
+    {
+        this.props.upgradeMode(this.state.mode === 'invoice'?'workorder': 'invoice');
+    }
+
+    protected displayT()
+    {
+        if(this.props.mode ==='invoice'){
+            return (<table style={{ width: '100%', borderCollapse: 'collapse' }}>
+            <tbody>
+                <tr>
+                    <td style={(s.td as any)}>
+                        Invoice Number
+                    </td>
+                    <td style={(s.td as any)}>
+                        {this.props.page.invoice}
+                    </td>
+                </tr>
+                <tr>
+                    <td style={(s.td as any)}>
+                        Completion Date
+                    </td>
+                    <td style={(s.td as any)}>
+                        {this.parseDate(this.props.page.completionDate)}
+                    </td>
+
+                </tr>
+                <tr>
+                    <td style={(s.td as any)}>
+                        Invoice Date
+                    </td>
+                    <td style={(s.td as any)}>
+                        {this.parseDate(this.props.page.invoiceDate)}
+                    </td>
+                </tr>
+            </tbody>
+        </table>);
+        }
+        return void 0;
     }
 
     protected mapItem(value: IItem, index: number): JSX.Element {

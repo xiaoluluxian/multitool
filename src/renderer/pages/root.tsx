@@ -15,12 +15,13 @@ import createParser, { destroyParser } from "../../main/parser";
 import { IItem, IPage } from './interface';
 
 import Edit from './edit';
-import Show from './show';
+import Show, {TMode} from './show';
 
 import * as fs from 'fs';
 
 export interface IState {
     page: IPage;
+    mode: TMode;
     saveStatus: string;
     isMaximze: boolean;
 }
@@ -44,7 +45,10 @@ class Root extends React.Component<{}, IState> {
     public constructor(props) {
         super(props);
         this.state = {
+            
             page: this.init(),
+            mode: 'invoice',
+            
             isMaximze: false,
             saveStatus: '',
         };
@@ -124,7 +128,13 @@ class Root extends React.Component<{}, IState> {
                 </div>
                 <div className="show">
                     <Show page={this.state.page}
+                    mode={this.state.mode}
                         updatePage={this.updatePage}
+                        upgradeMode={(mode)=>{
+                            this.setState({
+                                mode,
+                            })
+                        }}
                     />
                 </div>
             </div>
@@ -216,11 +226,11 @@ class Root extends React.Component<{}, IState> {
     }
 
     protected renderPicture() {
-        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} isPrint />));
+        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} isPrint />));
     }
 
     protected renderNoPicture() {
-        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} noPicture isPrint />));
+        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} noPicture isPrint />));
     }
 
     protected updatePage(page: IPage, next?: () => void) {

@@ -30,11 +30,6 @@ class Hello extends React.Component<{}, {
                 <div className="title">
                     <div className="left"><i className="fas fa-dove"></i>&nbsp;RPN Parser</div>
                     <div className="right">
-                        {/* <button onClick={() => {
-                            this.setState({ help: !this.state.help });
-                        }}>
-                            <i className="fas fa-question"></i>
-                        </button> */}
                         <button onClick={this.minium}>
                         <i className="fas fa-minus"></i>
                         </button>
@@ -61,6 +56,12 @@ class Hello extends React.Component<{}, {
     protected close() {
         ipcRenderer.send('window-control', 'close');
     }
+
+    
+    
+
+
+
 }
 
 export default Hello;

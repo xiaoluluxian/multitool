@@ -11,14 +11,23 @@ import { IEach, IList, IParsed, IPicture } from './interface';
 
 import logo from '../../renderer/pages/logo';
 import repairBaseLogo from './repairbaseLogo';
+import printToString, { Print } from './print';
+
+import Lunuh from '../components/lunuh';
 
 import * as fs from 'fs';
 import * as path from 'path';
+import { ipcRenderer } from 'electron';
 
 export interface IProps {
     content: IParsed;
     updateContent: (newContent: IParsed) => void;
     repairBaseId: string;
+}
+
+export interface IEach{
+    content: IEach;
+    updateContent:(newContent :IEach) => void;
 }
 
 const s = {
@@ -58,6 +67,7 @@ export class Edit extends React.Component<IProps, {}> {
         super(props);
         this.mapCategory = this.mapCategory.bind(this);
         this.mapStuff = this.mapStuff.bind(this);
+        this.saveFile = this.saveFile.bind(this);
 
         this.buildPicture = this.buildPicture.bind(this);
         this.mapPicture = this.mapPicture.bind(this);
@@ -80,6 +90,11 @@ export class Edit extends React.Component<IProps, {}> {
                             height: '80px',
                         }} />
                     </div>
+                    <div>
+                    <button className="big" onClick={this.saveFile} title="export to pdf">
+                        <i className="far fa-file-pdf"></i>
+                        </button>
+                        </div>
                     <div style={{
                         fontSize: '21px',
                     }}>
@@ -420,7 +435,6 @@ export class Edit extends React.Component<IProps, {}> {
         }
         return (<div key={pictureIndex} style={{
             flex: 1,
-            // minWidth: '33%',
             minWidth: '220px',
             maxWidth: '220px',
             paddingLeft: '3px',
@@ -484,10 +498,14 @@ export class Edit extends React.Component<IProps, {}> {
         return pictureList;
     }
 
+    protected saveFile() {
+        ipcRenderer.send('save-file', 'test', printToString(this.props.content, this.props.repairBaseId));
+    }
+
     protected mapStuff(value: IEach, index: number, category: string) {
 
         return (<React.Fragment key={index}>
-            <tr key={value.item}>
+            <tr key={category + index}>
                 <td><button onClick={() => {
                     let temp = this.props.content;
                     for (let i of temp.list) {
@@ -496,12 +514,30 @@ export class Edit extends React.Component<IProps, {}> {
                         }
                     }
                     this.props.updateContent(temp);
-                }}>123</button></td>
+                }}>Delete</button></td>
+
                 <td style={{
                     maxWidth: '30px',
                     padding: '3px',
                     border: '1px solid black',
-                }}>{value.item}</td>
+                }}> <input 
+                style={{
+                    maxWidth: '5px',
+                }}
+                value={value.item} onChange={(event) => {
+                    const current = this.props.content;
+                    for(let i=0;i<current.list.length;i++){
+                        if(current.list[i].cate === category){
+                            current.list[i].each[index].item = parseInt(event.target.value) || 0;
+                        }
+                    }
+
+                    this.props.updateContent(current);
+
+                }} />
+                
+                </td>
+
                 <td style={{
                     maxWidth: '300px',
                     padding: '3px',
@@ -530,8 +566,8 @@ export class Edit extends React.Component<IProps, {}> {
                     padding: '3px',
                     border: '1px solid black',
                 }}>${value.cost}</td>
+                </tr>
                 {value.image ? this.buildPicture(value.image) : void 0}
-            </tr>
         </React.Fragment>);
     }
 }

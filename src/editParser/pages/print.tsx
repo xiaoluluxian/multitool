@@ -269,6 +269,7 @@ export class Print extends React.Component<IProps, {}> {
                                 padding: "3px",
                             }}>Cost</th>
                         </tr>
+                        
                     </thead>
                     <tbody>
                         {value.each.map(this.mapStuff)}
@@ -309,7 +310,7 @@ export class Print extends React.Component<IProps, {}> {
                     width: '100%',
                     height: '100px',
                 }}
-                src={picture.src}
+                src={path.resolve(picture.src)}
             />
         </div>);
     }
@@ -388,7 +389,8 @@ export class Print extends React.Component<IProps, {}> {
                     padding: '3px',
                     border: '1px solid black',
                 }}>${value.cost}</td>
-                {value.image ? this.buildPicture(value.image) : void 0}
+                    {value.image ? this.buildPicture(value.image) : void 0}
+                
             </tr>
         </React.Fragment>);
     }
