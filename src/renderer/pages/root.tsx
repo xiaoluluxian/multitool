@@ -57,6 +57,7 @@ class Root extends React.Component<{}, IState> {
         this.renderPicture = this.renderPicture.bind(this);
         this.renderNoPicture = this.renderNoPicture.bind(this);
         this.onChangeMaxStatus = this.onChangeMaxStatus.bind(this);
+        this.upgradeMode = this.upgradeMode.bind(this);
         
         this.editParser = this.editParser.bind(this);
 
@@ -80,12 +81,6 @@ class Root extends React.Component<{}, IState> {
         return (<div className="outer">
             <div className="title">
                 <div className="p6"><i className="fas fa-receipt"></i>&nbsp;RPN Invoice</div>
-                <div className="stage1">
-                    <button onClick={this.editParser} title="parser">
-                        <i className="fas fa-balance-scale"></i>
-                    </button>
-                </div>
-                <div className="seprate"></div>
                 <div className="save-status-container">
                     <button onClick={this.saveFile} title="save">
                         <i className="fas fa-save"></i>
@@ -248,6 +243,18 @@ class Root extends React.Component<{}, IState> {
         } else {
             this.setState({
                 page,
+            });
+        }
+    }
+
+    protected upgradeMode(mode: TMode, next?:() => void){
+        if (next) {
+            this.setState({
+                mode,
+            }, next);
+        } else {
+            this.setState({
+                mode,
             });
         }
     }
