@@ -522,7 +522,7 @@ export class Edit extends React.Component<IProps, {}> {
                     border: '1px solid black',
                 }}> <input 
                 style={{
-                    maxWidth: '5px',
+                    maxWidth: '30px',
                 }}
                 value={value.item} onChange={(event) => {
                     const current = this.props.content;
@@ -553,19 +553,83 @@ export class Edit extends React.Component<IProps, {}> {
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
-                }}>{value.qty}</td>
+                }}>
+                    <input 
+                style={{
+                    maxWidth: '30px',
+                }}
+                value={value.qty} onChange={(event) => {
+                    const current = this.props.content;
+                    for(let i=0;i<current.list.length;i++){
+                        if(current.list[i].cate === category){
+                            current.list[i].each[index].qty = parseInt(event.target.value) || 0;
+                        }
+                    }
+
+                    this.props.updateContent(current);
+
+                }} />
+                </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
-                }}>{value.UM}</td>
+                }}>
+                    <input 
+                style={{
+                    maxWidth: '30px',
+                }}
+                value={value.UM} onChange={(event) => {
+                    const current = this.props.content;
+                    for(let i=0;i<current.list.length;i++){
+                        if(current.list[i].cate === category){
+                            current.list[i].each[index].UM = event.target.value;
+                        }
+                    }
+
+                    this.props.updateContent(current);
+
+                }} />
+                </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
-                }}>${value.PPU}</td>
+                }}>$
+                    <input 
+                style={{
+                    maxWidth: '100px',
+                }}
+                value={value.PPU} onChange={(event) => {
+                    const current = this.props.content;
+                    for(let i=0;i<current.list.length;i++){
+                        if(current.list[i].cate === category){
+                            current.list[i].each[index].PPU = parseInt(event.target.value) || 0;
+                        }
+                    }
+
+                    this.props.updateContent(current);
+
+                }} />
+                </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
-                }}>${value.cost}</td>
+                }}>$
+                <input 
+                style={{
+                    maxWidth: '100px',
+                }}
+                value={value.cost} onChange={(event) => {
+                    const current = this.props.content;
+                    for(let i=0;i<current.list.length;i++){
+                        if(current.list[i].cate === category){
+                            current.list[i].each[index].cost = parseInt(event.target.value) || 0;
+                        }
+                    }
+
+                    this.props.updateContent(current);
+
+                }} />
+                </td>
                 </tr>
                 {value.image ? this.buildPicture(value.image) : void 0}
         </React.Fragment>);

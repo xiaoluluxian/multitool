@@ -25,9 +25,7 @@ export interface IProps {
     isPrint?: boolean;
 }
 
-export interface IState {
-    mode: TMode;
-}
+
 /**
          * FOR MAINTAINER
          * MAKE SURE THIS part is not editable
@@ -58,16 +56,14 @@ const s = {
     },
 };
 
-class Show extends React.Component<IProps, IState> {
+class Show extends React.Component<IProps> {
     public constructor(props) {
         super(props);
         this.mapItem = this.mapItem.bind(this);
         this.change = this.change.bind(this);
 
         this.displayT = this.displayT.bind(this);
-        this.state = {
-            mode: 'invoice',
-        };
+        
     }
 
     public render(): JSX.Element {
@@ -84,7 +80,12 @@ class Show extends React.Component<IProps, IState> {
         total += tax;
 
         return (<div>
-            {this.props.isPrint?void 0:<button id="change status" onClick={this.change}></button>}
+            {this.props.isPrint? void 0:<button 
+            style={{
+                width: '40px',
+                height: '10px',
+            }}
+             id="change status" onClick={this.change}></button>}
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -114,7 +115,7 @@ class Show extends React.Component<IProps, IState> {
                     color: 'lightblue',
                     textAlign: 'center',
                     
-                }}>{this.props.mode === 'invoice'?"INVOICE": "WORK ORDER"}</div>
+                }}>{this.props.mode === 'invoice'?"INVOICE": "WORK ORDER" }</div>
             </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 3 }}>
@@ -281,7 +282,8 @@ class Show extends React.Component<IProps, IState> {
     }
     protected change() 
     {
-        this.props.upgradeMode(this.state.mode === 'invoice'?'workorder': 'invoice');
+        this.props.upgradeMode(this.props.mode === 'invoice'? 'workorder': 'invoice');
+        console.log(this.props.mode);
     }
 
     protected displayT()
