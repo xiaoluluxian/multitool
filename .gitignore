@@ -1,3 +1,6 @@
 node_modules
 app/dist
 app/main
+
+app/cache
+.vs/

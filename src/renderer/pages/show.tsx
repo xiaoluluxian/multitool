@@ -82,8 +82,8 @@ class Show extends React.Component<IProps> {
         return (<div>
             {this.props.isPrint? void 0:<button 
             style={{
-                width: '70px',
-                height: '50px',
+                width: '40px',
+                height: '10px',
             }}
              id="change status" onClick={this.change}></button>}
             <div style={{
