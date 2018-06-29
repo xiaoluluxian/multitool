@@ -4,9 +4,9 @@
  */
 
 export default {
-    isDebug: true,
+    isDebug: false,
     backgroundColor: "white",
-    version: "1.4.1",
+    version: "1.5.0",
     pageclipAPIKEY: 'api_1lTukXYBULhnVY9WAouliY2AMPhzlS0w',
     pageclipVeri: 'YXBpXzFsVHVrWFlCVUxoblZZOVdBb3VsaVkyQU1QaHpsUzB3Og',
 };

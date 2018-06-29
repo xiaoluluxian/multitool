@@ -3,7 +3,7 @@
  * @fileoverview Root Route
  */
 
-import { ipcRenderer, app, BrowserWindow, dialog, Event, ipcMain, Menu, shell} from 'electron';
+import { ipcRenderer, app, BrowserWindow, dialog, Event, ipcMain, Menu, shell } from 'electron';
 import * as React from "react";
 import { renderToString } from 'react-dom/server';
 
@@ -13,9 +13,10 @@ import createParser, { destroyParser } from "../../main/parser";
 //import createParser, { destroyParser } from "./parser";
 
 import { IItem, IPage } from './interface';
+import { IParsed } from '../../editParser/pages/interface';
 
 import Edit from './edit';
-import Show, {TMode} from './show';
+import Show, { TMode } from './show';
 
 import * as fs from 'fs';
 
@@ -45,10 +46,10 @@ class Root extends React.Component<{}, IState> {
     public constructor(props) {
         super(props);
         this.state = {
-            
+
             page: this.init(),
             mode: 'invoice',
-            
+
             isMaximze: false,
             saveStatus: '',
         };
@@ -58,8 +59,7 @@ class Root extends React.Component<{}, IState> {
         this.renderNoPicture = this.renderNoPicture.bind(this);
         this.onChangeMaxStatus = this.onChangeMaxStatus.bind(this);
         this.upgradeMode = this.upgradeMode.bind(this);
-        
-        this.editParser = this.editParser.bind(this);
+        this.iparsedToIPage = this.iparsedToIPage.bind(this);
 
         this.saveFile = this.saveFile.bind(this);
         this.loadFile = this.loadFile.bind(this);
@@ -85,7 +85,7 @@ class Root extends React.Component<{}, IState> {
                     <button onClick={this.saveFile} title="save">
                         <i className="fas fa-save"></i>
                     </button>
-                    <button onClick={this.loadFile}title="open">
+                    <button onClick={this.loadFile} title="open">
                         <i className="fas fa-folder-open"></i>
                     </button>
                     <div className={"save-status" + (this.state.saveStatus ? " active" : "")}>{this.state.saveStatus}</div>
@@ -104,15 +104,15 @@ class Root extends React.Component<{}, IState> {
                 <div className="seprate"></div>
                 <button onClick={() => {
                     ipcRenderer.send('window-control', 'min');
-                }}title="minimize"><i className="fas fa-window-minimize"></i></button>
+                }} title="minimize"><i className="fas fa-window-minimize"></i></button>
                 <button onClick={() => {
                     ipcRenderer.send('window-control', 'max');
-                }}title="maximize">
+                }} title="maximize">
                     {this.state.isMaximze ? <i className="far fa-window-restore"></i> : <i className="far fa-window-maximize"></i>}
                 </button>
                 <button onClick={() => {
                     ipcRenderer.send('window-control', 'close');
-                }}title="close"><i className="far fa-window-close"></i></button>
+                }} title="close"><i className="far fa-window-close"></i></button>
             </div>
             <div className="content">
                 <div className="edit">
@@ -123,9 +123,9 @@ class Root extends React.Component<{}, IState> {
                 </div>
                 <div className="show">
                     <Show page={this.state.page}
-                    mode={this.state.mode}
+                        mode={this.state.mode}
                         updatePage={this.updatePage}
-                        upgradeMode={(mode)=>{
+                        upgradeMode={(mode) => {
                             this.setState({
                                 mode,
                             })
@@ -136,10 +136,43 @@ class Root extends React.Component<{}, IState> {
         </div>
         );
     }
-   
 
-    protected editParser(){
-        createParser();
+    /**
+     * Convert IParsed Object to IPage object
+     *
+     * @protected
+     * @param {IParsed} parsed
+     * @returns {IPage}
+     * @memberof Root
+     */
+    protected iparsedToIPage(parsed: IParsed): IPage {
+        const uniqueIdSmall = () => {
+            return '_' + Math.random().toString(36).substring(2, 9);
+        };
+        let pagei: IPage = {
+            invoice: '',
+            billTo: '',
+            address: '',
+            completionDate: new Date().toString(),
+            invoiceDate: new Date(),
+            item: [],
+            tax: 0,
+        };
+
+        for (let list of parsed.list) {
+            for (let current of list.each) {
+                pagei.item.push({
+                    description: current.description,
+                    unique: uniqueIdSmall(),
+                    amount: current.cost,
+                    taxable: true,
+                    before: [...current.image ? current.image.map((picture) => picture.src) : []],
+                    during: [],
+                    after: [],
+                });
+            }
+        }
+        return pagei;
     }
 
     protected mentionSave() {
@@ -148,7 +181,7 @@ class Root extends React.Component<{}, IState> {
         }, 300000);
     }
 
-    
+
 
     protected changeStatus(status: string) {
 
@@ -198,8 +231,14 @@ class Root extends React.Component<{}, IState> {
                         if (err) {
                             this.changeStatus('Error!');
                         } else {
-                            const parsed: IPage = JSON.parse(content.toString());
+                            let parsed: IPage = JSON.parse(content.toString());
+
+                            if (!Boolean(parsed.invoice)) {
+                                parsed = this.iparsedToIPage((parsed as any));
+                            }
+
                             parsed.invoiceDate = new Date(parsed.invoiceDate);
+
                             this.setState({
                                 page: parsed,
                             });
@@ -247,7 +286,7 @@ class Root extends React.Component<{}, IState> {
         }
     }
 
-    protected upgradeMode(mode: TMode, next?:() => void){
+    protected upgradeMode(mode: TMode, next?: () => void) {
         if (next) {
             this.setState({
                 mode,

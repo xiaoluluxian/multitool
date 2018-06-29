@@ -38,7 +38,7 @@ class Root extends React.Component<{}, IState> {
             mode: "drag",
             filePath: '',
             repairBaseId: "",
-            imageDevider: '_',
+            imageDevider: '+',
         };
         this.inner = null;
         this.onDrop = this.onDrop.bind(this);

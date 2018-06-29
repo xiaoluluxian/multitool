@@ -15,7 +15,7 @@ import * as Cheerio from 'cheerio';
 import Dropper from '../components/dropper';
 import Loading from '../components/loading';
 import printToString, { Print } from './print';
-import Edit from './edit';
+import Edit,{TMode} from './edit';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -25,9 +25,10 @@ import { availableDivider, IEach, IParsed } from './interface';
 export interface IState {
     mode: "drag" | "export";
     filePath: string;
+    mode2:TMode;
     repairBaseId: string;
     imageDevider: availableDivider;
-    inner: IParsed;
+    inner: IParsed;//all things u can see
 }
 
 class Root extends React.Component<{}, IState> {
@@ -37,14 +38,16 @@ class Root extends React.Component<{}, IState> {
         super(props);
         this.state = {
             mode: "drag",
+            mode2:'invoice',
             filePath: '',
             repairBaseId: "",
-            imageDevider: '_',
+            imageDevider: '+',
             inner: null,
         };
         this.onDrop = this.onDrop.bind(this);
         this.onLoad = this.onLoad.bind(this);
         this.saveFile = this.saveFile.bind(this);
+        this.upgradeMode = this.upgradeMode.bind(this);
 
         this.preparePictureList = this.preparePictureList.bind(this);
 
@@ -63,16 +66,23 @@ class Root extends React.Component<{}, IState> {
                     return (<div className="entire theme-bg">
                         <Edit
                             content={this.state.inner}
+                            mode2={this.state.mode2}
                             repairBaseId={this.state.repairBaseId}
                             updateContent={(content: IParsed) => {
                                 this.setState({
                                     inner: content,
                                 });
-                            }} />
+                            }}
+                            upgradeMode={(mode2)=>{
+                                this.setState({
+                                    mode2
+                                })
+                            }}
+                            />
                     </div>);
                 } else {
                     return (<div className="entire theme-bg">
-                        Hello
+                        Processing
                 </div>);
                 }
             default:
@@ -90,6 +100,17 @@ class Root extends React.Component<{}, IState> {
         this.setState({
             mode: 'export',
         });
+    }
+    protected upgradeMode(mode2: TMode, next?:() =>void){
+        if(next){
+            this.setState({
+                mode2,
+            }, next);
+        } else {
+            this.setState({
+                mode2,
+            });
+        }
     }
 
     /**

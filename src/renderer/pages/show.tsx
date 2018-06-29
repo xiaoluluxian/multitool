@@ -82,10 +82,12 @@ class Show extends React.Component<IProps> {
         return (<div>
             {this.props.isPrint? void 0:<button 
             style={{
-                width: '40px',
-                height: '10px',
+                width: '30px',
+                height: '25px',
             }}
-             id="change status" onClick={this.change}></button>}
+             onClick={this.change} title="change status">
+             <i className="far fa-bell"></i>
+             </button>}
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',

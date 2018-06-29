@@ -41,7 +41,7 @@ class Edit extends React.Component<IProps, {}> {
         return (<div>
             {this.renderMain()}
             {this.props.page.item.map(this.mapItem)}
-            <button onClick={this.addItem} className="big" title="add item"> 
+            <button onClick={this.addItem} className="big" title="add item">
                 <i className="fas fa-plus-square"></i>
             </button>
         </div>);
@@ -157,7 +157,7 @@ class Edit extends React.Component<IProps, {}> {
         };
     }
 
-    
+
 
     protected addItem(): void {
         let page: IPage = this.props.page;
@@ -171,13 +171,13 @@ class Edit extends React.Component<IProps, {}> {
             page.item[index].before.push('');
             this.props.updatePage(page);
         };
-        const addMutipleBefore = (fileList:string[]) => {
+        const addMutipleBefore = (fileList: string[]) => {
             let page: IPage = this.props.page;
             page.item[index].before.push(...fileList);
             this.props.updatePage(page);
         };
 
-        const addMutipleDuring = (fileList:string[]) => {
+        const addMutipleDuring = (fileList: string[]) => {
             let page: IPage = this.props.page;
             page.item[index].during.push(...fileList);
             this.props.updatePage(page);
@@ -189,12 +189,12 @@ class Edit extends React.Component<IProps, {}> {
             this.props.updatePage(page);
         };
 
-        const addMutipleAfter = (fileList:string[]) => {
+        const addMutipleAfter = (fileList: string[]) => {
             let page: IPage = this.props.page;
             page.item[index].after.push(...fileList);
             this.props.updatePage(page);
         };
-        
+
         const addAfter = () => {
             let page: IPage = this.props.page;
             page.item[index].after.push('');
@@ -292,12 +292,12 @@ class Edit extends React.Component<IProps, {}> {
                             let page: IPage = this.props.page;
                             page.item.splice(index, 1);
                             this.props.updatePage(page);
-                        }}title="delete"><i className="fas fa-times"></i></button>
+                        }} title="delete"><i className="fas fa-times"></i></button>
                         <button className={value.taxable ? "check" : "uncheck"} onClick={() => {
                             let page: IPage = this.props.page;
                             page.item[index].taxable = !page.item[index].taxable;
                             this.props.updatePage(page);
-                        }}title="tax"><i className="fas fa-money-check-alt"></i></button>
+                        }} title="tax"><i className="fas fa-money-check-alt"></i></button>
                     </div>
                     <div className="left"><h3>Item - {index + 1}</h3></div>
                 </div>
@@ -330,7 +330,7 @@ class Edit extends React.Component<IProps, {}> {
                     <MultiDropper
                         onDrop={addMutipleBefore}
                         load=""
-                        />
+                    />
                     {value.before.map(mapBeforePicture)}
                     <button
                         onClick={addBefore}
@@ -345,17 +345,17 @@ class Edit extends React.Component<IProps, {}> {
                     <MultiDropper
                         onDrop={addMutipleDuring}
                         load=""
-                        />
+                    />
                     {value.during.map(mapDuringPicture)}
                     <button onClick={addDuring} className="add" title="during photo">
                         <i className="fas fa-wrench"></i>
                     </button>
                 </div>
                 <div className="picture">
-                <MultiDropper
+                    <MultiDropper
                         onDrop={addMutipleAfter}
                         load=""
-                        />
+                    />
                     {value.after.map(mapAfterPicture)}
                     <button onClick={addAfter} className="add" title="after photo">
                         <i className="fas fa-clipboard-check"></i>

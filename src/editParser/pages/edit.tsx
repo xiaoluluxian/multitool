@@ -7,7 +7,7 @@
 import * as React from 'react';
 
 import Config from '../../config/config';
-import { IEach, IList, IParsed, IPicture } from './interface';
+import { IEach, IList, IParsed, IPicture, IPage } from './interface';
 
 import logo from '../../renderer/pages/logo';
 import repairBaseLogo from './repairbaseLogo';
@@ -19,15 +19,23 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { ipcRenderer } from 'electron';
 
+export type TMode = 'invoice' | 'workorder';
+
 export interface IProps {
-    content: IParsed;
+    //page:IPage;
+    //saveStatus:string;
+    content: IParsed;//all things u can see
+    mode2: TMode;
     updateContent: (newContent: IParsed) => void;
+    upgradeMode?: (mode: TMode) => void;
     repairBaseId: string;
 }
 
-export interface IEach{
+
+
+export interface IEach {
     content: IEach;
-    updateContent:(newContent :IEach) => void;
+    updateContent: (newContent: IEach) => void;
 }
 
 const s = {
@@ -63,11 +71,17 @@ const s = {
 };
 
 export class Edit extends React.Component<IProps, {}> {
+    private interval: any;
     public constructor(props) {
         super(props);
         this.mapCategory = this.mapCategory.bind(this);
         this.mapStuff = this.mapStuff.bind(this);
         this.saveFile = this.saveFile.bind(this);
+        this.saveJson = this.saveJson.bind(this);
+        this.mentionSave = this.mentionSave.bind(this);
+        this.changeStatus = this.changeStatus.bind(this);
+
+        this.change = this.change.bind(this);
 
         this.buildPicture = this.buildPicture.bind(this);
         this.mapPicture = this.mapPicture.bind(this);
@@ -89,12 +103,15 @@ export class Edit extends React.Component<IProps, {}> {
                             width: 'auto',
                             height: '80px',
                         }} />
-                    </div>
-                    <div>
-                    <button className="big" onClick={this.saveFile} title="export to pdf">
-                        <i className="far fa-file-pdf"></i>
+                        
+                        <button className="big" onClick={this.saveFile} title="export to pdf">
+                            <i className="far fa-file-pdf"></i>
                         </button>
-                        </div>
+                        <button className="big" onClick={this.saveJson} title="export json">
+                            <i className="far fa-save"></i>
+                        </button>
+
+                    </div>
                     <div style={{
                         fontSize: '21px',
                     }}>
@@ -234,6 +251,15 @@ export class Edit extends React.Component<IProps, {}> {
                         width: 'auto',
                         height: 'auto',
                     }} />
+                </div>
+
+                <div id="text status" style={{
+                    width: '30%',
+                    fontSize: '35px',
+                    fontWeight: 'bold',
+                    color: 'lightblue',
+                    textAlign: 'center',
+                }}>{this.props.mode2 === 'invoice' ? void 0 : "WORK ORDER"}
                 </div>
                 <div style={{
                     flex: 4,
@@ -401,6 +427,47 @@ export class Edit extends React.Component<IProps, {}> {
             </div>);
     }
 
+    protected changeStatus(status: string) {
+
+        /**
+         * FOR MAINTAINER
+         * Interval can only have one at the same time, MAKESURE to call changestatus instead create your own timeout function
+         */
+        clearTimeout(this.interval);
+        this.setState({
+            saveStatus: status,
+        });
+        this.interval = setTimeout(() => {
+            this.setState({
+                saveStatus: '',
+            });
+            this.mentionSave();
+        }, 2000);
+    }
+
+    protected mentionSave() {
+        this.interval = setTimeout(() => {
+            this.changeStatus('Time to save');
+        }, 300000);
+    }
+
+    protected saveJson() {
+        ipcRenderer.once('save-page-re', (event, arg) => {
+            if (arg) {
+                fs.writeFile(arg, JSON.stringify(this.props.content), (err) => {
+                    if (err) {
+                        this.changeStatus('Error!');
+                    } else {
+                        this.changeStatus('Succeed');
+                    }
+                });
+            } else {
+                this.changeStatus('Canceled');
+            }
+        });
+        ipcRenderer.send('save-page', 'json-save');
+    }
+
     protected base64_encode(file: string): string {
         /**
          * FOR MAINTAINER
@@ -428,6 +495,11 @@ export class Edit extends React.Component<IProps, {}> {
         let imgSrcString: string = `data:image/${extensionName.split('.').pop()};base64,${base64Image}`;
         return imgSrcString;
     }
+
+    protected change() {
+        this.props.upgradeMode(this.props.mode2 === 'invoice' ? 'workorder' : 'invoice');
+    }
+
 
     protected mapPicture(picture: IPicture, pictureIndex: number) {
         if (!picture) {
@@ -520,22 +592,22 @@ export class Edit extends React.Component<IProps, {}> {
                     maxWidth: '30px',
                     padding: '3px',
                     border: '1px solid black',
-                }}> <input 
-                style={{
-                    maxWidth: '30px',
-                }}
-                value={value.item} onChange={(event) => {
-                    const current = this.props.content;
-                    for(let i=0;i<current.list.length;i++){
-                        if(current.list[i].cate === category){
-                            current.list[i].each[index].item = parseInt(event.target.value) || 0;
-                        }
-                    }
+                }}> <input
+                        style={{
+                            maxWidth: '30px',
+                        }}
+                        value={value.item} onChange={(event) => {
+                            const current = this.props.content;
+                            for (let i = 0; i < current.list.length; i++) {
+                                if (current.list[i].cate === category) {
+                                    current.list[i].each[index].item = parseInt(event.target.value) || 0;
+                                }
+                            }
 
-                    this.props.updateContent(current);
+                            this.props.updateContent(current);
 
-                }} />
-                
+                        }} />
+
                 </td>
 
                 <td style={{
@@ -554,84 +626,84 @@ export class Edit extends React.Component<IProps, {}> {
                     padding: '3px',
                     border: '1px solid black',
                 }}>
-                    <input 
-                style={{
-                    maxWidth: '30px',
-                }}
-                value={value.qty} onChange={(event) => {
-                    const current = this.props.content;
-                    for(let i=0;i<current.list.length;i++){
-                        if(current.list[i].cate === category){
-                            current.list[i].each[index].qty = parseInt(event.target.value) || 0;
-                        }
-                    }
+                    <input
+                        style={{
+                            maxWidth: '30px',
+                        }}
+                        value={value.qty} onChange={(event) => {
+                            const current = this.props.content;
+                            for (let i = 0; i < current.list.length; i++) {
+                                if (current.list[i].cate === category) {
+                                    current.list[i].each[index].qty = parseInt(event.target.value) || 0;
+                                }
+                            }
 
-                    this.props.updateContent(current);
+                            this.props.updateContent(current);
 
-                }} />
+                        }} />
                 </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
                 }}>
-                    <input 
-                style={{
-                    maxWidth: '30px',
-                }}
-                value={value.UM} onChange={(event) => {
-                    const current = this.props.content;
-                    for(let i=0;i<current.list.length;i++){
-                        if(current.list[i].cate === category){
-                            current.list[i].each[index].UM = event.target.value;
-                        }
-                    }
+                    <input
+                        style={{
+                            maxWidth: '30px',
+                        }}
+                        value={value.UM} onChange={(event) => {
+                            const current = this.props.content;
+                            for (let i = 0; i < current.list.length; i++) {
+                                if (current.list[i].cate === category) {
+                                    current.list[i].each[index].UM = event.target.value;
+                                }
+                            }
 
-                    this.props.updateContent(current);
+                            this.props.updateContent(current);
 
-                }} />
+                        }} />
                 </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
                 }}>$
-                    <input 
-                style={{
-                    maxWidth: '100px',
-                }}
-                value={value.PPU} onChange={(event) => {
-                    const current = this.props.content;
-                    for(let i=0;i<current.list.length;i++){
-                        if(current.list[i].cate === category){
-                            current.list[i].each[index].PPU = parseInt(event.target.value) || 0;
-                        }
-                    }
+                    <input
+                        style={{
+                            maxWidth: '100px',
+                        }}
+                        value={value.PPU} onChange={(event) => {
+                            const current = this.props.content;
+                            for (let i = 0; i < current.list.length; i++) {
+                                if (current.list[i].cate === category) {
+                                    current.list[i].each[index].PPU = parseInt(event.target.value) || 0;
+                                }
+                            }
 
-                    this.props.updateContent(current);
+                            this.props.updateContent(current);
 
-                }} />
+                        }} />
                 </td>
                 <td style={{
                     padding: '3px',
                     border: '1px solid black',
                 }}>$
-                <input 
-                style={{
-                    maxWidth: '100px',
-                }}
-                value={value.cost} onChange={(event) => {
-                    const current = this.props.content;
-                    for(let i=0;i<current.list.length;i++){
-                        if(current.list[i].cate === category){
-                            current.list[i].each[index].cost = parseInt(event.target.value) || 0;
-                        }
-                    }
+                <input
+                        style={{
+                            maxWidth: '100px',
+                        }}
+                        value={value.cost} onChange={(event) => {
+                            const current = this.props.content;
+                            for (let i = 0; i < current.list.length; i++) {
+                                if (current.list[i].cate === category) {
+                                    current.list[i].each[index].cost = parseInt(event.target.value) || 0;
+                                }
+                            }
 
-                    this.props.updateContent(current);
+                            this.props.updateContent(current);
 
-                }} />
+                        }} />
                 </td>
-                </tr>
-                {value.image ? this.buildPicture(value.image) : void 0}
+            </tr>
+            {value.image ? this.buildPicture(value.image) : void 0}
         </React.Fragment>);
     }
 }
