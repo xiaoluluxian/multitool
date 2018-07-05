@@ -232,9 +232,9 @@ class Root extends React.Component<{}, IState> {
                             this.changeStatus('Error!');
                         } else {
                             let parsed: IPage = JSON.parse(content.toString());
-
-                            if (!Boolean(parsed.invoice)) {
+                            if (parsed.invoice===undefined) {
                                 parsed = this.iparsedToIPage((parsed as any));
+                                console.log(parsed);
                             }
 
                             parsed.invoiceDate = new Date(parsed.invoiceDate);
