@@ -213,7 +213,7 @@ class Edit extends React.Component<IProps, {}> {
                 page.item[index].before.splice(pictureIndex, 1);
                 this.props.updatePage(page);
             };
-            return (<div className="ikka" key={pictureIndex} >
+            return (<div className="ikka" key={pictureIndex}>
                 <Dropper
                     onDrop={editPicture}
                     load={picture} />

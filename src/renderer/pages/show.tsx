@@ -121,8 +121,8 @@ class Show extends React.Component<IProps> {
             </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 3 }}>
-                    1213 Colony Dr.<br />
-                    Hartsdale, NY 10530<br />
+                    10 Old Mamaroneck Road Unit 1A.<br />
+                    White Plains, NY 10605<br />
                     Phone: (646)-568-0008
                 </div>
                 <div style={{ flex: 2 }}>
