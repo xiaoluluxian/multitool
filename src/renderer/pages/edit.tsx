@@ -13,15 +13,18 @@ import { IItem, IPage } from './interface';
 
 import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
+import * as fs from "fs";
 
-import MultiDropper from './multiDropper'
+import MultiDropper from './multiDropper';
 
+import * as $ from 'jquery';
+import * as Path from 'path';
+import * as NodeFormData from 'form-data';
 
 export interface IProps {
     page: IPage;
     updatePage: (page: IPage, next?: () => void) => void;
 }
-
 
 class Edit extends React.Component<IProps, {}> {
     /**
@@ -203,9 +206,30 @@ class Edit extends React.Component<IProps, {}> {
 
         const mapBeforePicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
-                let page: IPage = this.props.page;
-                page.item[index].before[pictureIndex] = path;
+                // const fd = new NodeFormData();
+                const bitmap: Buffer = fs.readFileSync(path);
+                const ext = Path.extname(path).toLowerCase();
+                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
+                // fd.append("image", fs.createReadStream(path));
+                // fd.append("tags", JSON.stringify(['ttt']));
+                // fd.append("key", 'test');
+
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags: ['test', 'INVOICE-123798127398'],
+                        key: 'test',
+                    }
+                }).then( (msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].before[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
                 this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
+                
             };
 
             const deletePicture = () => {
@@ -274,7 +298,7 @@ class Edit extends React.Component<IProps, {}> {
             </div>);
         };
 
-        return (<div key={value.unique}>
+        return (<div key={value.unique} >
             <div className="insert">
                 <button onClick={() => {
                     let page: IPage = this.props.page;

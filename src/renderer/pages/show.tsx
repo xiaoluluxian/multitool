@@ -63,7 +63,7 @@ class Show extends React.Component<IProps> {
         this.change = this.change.bind(this);
 
         this.displayT = this.displayT.bind(this);
-        
+
     }
 
     public render(): JSX.Element {
@@ -80,14 +80,14 @@ class Show extends React.Component<IProps> {
         total += tax;
 
         return (<div>
-            {this.props.isPrint? void 0:<button 
-            style={{
-                width: '30px',
-                height: '25px',
-            }}
-             onClick={this.change} title="change status">
-             <i className="far fa-bell"></i>
-             </button>}
+            {this.props.isPrint ? void 0 : <button
+                style={{
+                    width: '30px',
+                    height: '25px',
+                }}
+                onClick={this.change} title="change status">
+                <i className="far fa-bell"></i>
+            </button>}
             <div style={{
                 display: 'flex',
                 justifyContent: 'center',
@@ -116,8 +116,8 @@ class Show extends React.Component<IProps> {
                     fontWeight: 'bold',
                     color: 'lightblue',
                     textAlign: 'center',
-                    
-                }}>{this.props.mode === 'invoice'?"INVOICE": "WORK ORDER" }</div>
+
+                }}>{this.props.mode === 'invoice' ? "INVOICE" : "BID PHOTO"}</div>
             </div>
             <div style={{ display: 'flex' }}>
                 <div style={{ flex: 3 }}>
@@ -150,6 +150,7 @@ class Show extends React.Component<IProps> {
                             return <div key={index}>{value}</div>;
                         })}</td>
                     </tr>
+
                 </tbody>
             </table>
             <table style={{
@@ -257,6 +258,7 @@ class Show extends React.Component<IProps> {
          * if this.props.isprint means use is printing this page who have full access to file:// protocol
          * If not, read the file ourself and return as base64 string
          */
+        if (file.substring(0, 4) === 'http') return file
         if (file.length < 1) {
             return '';
         }
@@ -282,44 +284,42 @@ class Show extends React.Component<IProps> {
         let imgSrcString: string = `data:image/${extensionName.split('.').pop()};base64,${base64Image}`;
         return imgSrcString;
     }
-    protected change() 
-    {
-        this.props.upgradeMode(this.props.mode === 'invoice'? 'workorder': 'invoice');
+    protected change() {
+        this.props.upgradeMode(this.props.mode === 'invoice' ? 'workorder' : 'invoice');
         console.log(this.props.mode);
     }
 
-    protected displayT()
-    {
-        if(this.props.mode ==='invoice'){
+    protected displayT() {
+        if (this.props.mode === 'invoice') {
             return (<table style={{ width: '100%', borderCollapse: 'collapse' }}>
-            <tbody>
-                <tr>
-                    <td style={(s.td as any)}>
-                        Invoice Number
+                <tbody>
+                    <tr>
+                        <td style={(s.td as any)}>
+                            Invoice Number
                     </td>
-                    <td style={(s.td as any)}>
-                        {this.props.page.invoice}
+                        <td style={(s.td as any)}>
+                            {this.props.page.invoice}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style={(s.td as any)}>
+                            Completion Date
                     </td>
-                </tr>
-                <tr>
-                    <td style={(s.td as any)}>
-                        Completion Date
-                    </td>
-                    <td style={(s.td as any)}>
-                        {this.parseDate(this.props.page.completionDate)}
-                    </td>
+                        <td style={(s.td as any)}>
+                            {this.parseDate(this.props.page.completionDate)}
+                        </td>
 
-                </tr>
-                <tr>
-                    <td style={(s.td as any)}>
-                        Invoice Date
+                    </tr>
+                    <tr>
+                        <td style={(s.td as any)}>
+                            Invoice Date
                     </td>
-                    <td style={(s.td as any)}>
-                        {this.parseDate(this.props.page.invoiceDate)}
-                    </td>
-                </tr>
-            </tbody>
-        </table>);
+                        <td style={(s.td as any)}>
+                            {this.parseDate(this.props.page.invoiceDate)}
+                        </td>
+                    </tr>
+                </tbody>
+            </table>);
         }
         return void 0;
     }
