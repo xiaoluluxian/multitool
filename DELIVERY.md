@@ -112,3 +112,7 @@ There are three different location that you have to change for upgrading this so
 This software 100% will throw an error due to I remove my pageclip API key and verification key in src/config/config.ts.
 
 Use yours instead; also if the form name is changed, you have to change it in src/main.pageclip.ts. The reason I use nodejs native lib to submit this form instead of other lib is because .../ Regretted.
+
+### v1.5.4
+
+When user add pictures in invoice, the picture will upload to server and return picture ID
