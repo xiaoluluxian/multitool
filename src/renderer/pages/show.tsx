@@ -378,7 +378,9 @@ class Show extends React.Component<IProps> {
                             Invoice Number
                     </td>
                         <td style={(s.td as any)}>
-                            {this.props.page.invoice}
+                        {this.props.page.invoice.split('\n').map((value, index) => {
+                            return <div key={index}>{value}</div>;
+                        })}
                         </td>
                     </tr>
                     <tr>
@@ -410,11 +412,13 @@ class Show extends React.Component<IProps> {
                     <tbody>
                         <tr>
                             <td style={(s.td as any)}>
-                                Key Code
+                                Key Code/
                                 Lock Box Number
                         </td>
                             <td style={(s.td as any)}>
-                                {this.props.page.invoice.split('\n')}
+                            {this.props.page.invoice.split('\n').map((value, index) => {
+                            return <div key={index}>{value}</div>;
+                        })}
                             </td>
                         </tr>
                         <tr>
@@ -450,15 +454,21 @@ class Show extends React.Component<IProps> {
             }
             return (<div key={pictureIndex} style={{
                 flex: 1,
+                position: 'relative',
                 // minWidth: '33%',
                 minWidth: '220px',
                 maxWidth: '220px',
                 padding: '3px',
+                //marginLeft:'20px',
+                //marginTop:'0px',
             }} >
                 <img
                     style={{
+                        // position: 'static',
                         width: '100%',
                         height: 'auto',
+                        marginLeft:'3px',
+                        //marginTop:'0px',
                         border: '1px solid black',
                     }}
                     src={this.base64_encode(picture)}

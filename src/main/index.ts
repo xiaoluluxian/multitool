@@ -109,10 +109,10 @@ ipcMain.on('lunch-window', (evnet: any, windowName: string) => {
             createWindow();
             destroyNavgitor();
             break;
-        case 'par':
-            createParser();
-            destroyNavgitor();
-            break;
+        // {case 'par':
+        //     createParser();
+        //     destroyNavgitor();
+        //     break;}
         case 'editpar':
             createEditParser();
             destroyNavgitor();

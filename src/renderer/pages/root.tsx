@@ -237,9 +237,7 @@ class Root extends React.Component<{}, IState> {
                                 parsed = this.iparsedToIPage((parsed as any));
                                 console.log(parsed);
                             }
-
                              parsed.invoiceDate = new Date(parsed.invoiceDate).toString();
-
                             this.setState({
                                 page: parsed,
                             });
