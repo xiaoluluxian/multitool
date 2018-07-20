@@ -183,7 +183,8 @@ class Edit extends React.Component<IProps, {}> {
             for(var i=0;i<fileList.length;i++){
                 const bitmap: Buffer = fs.readFileSync(fileList[i]);
                 const ext = Path.extname(fileList[i]).toLowerCase();
-                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
+                
+                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
                 // fd.append("image", fs.createReadStream(path));
                 // fd.append("tags", JSON.stringify(['ttt']));
                 // fd.append("key", 'test');
@@ -192,12 +193,14 @@ class Edit extends React.Component<IProps, {}> {
                     url: "http://206.189.167.228/m/base64",
                     data: {
                         image: base64,
-                        tags: ['test', 'whatever'],
+                        tags: this.props.page.address,
                         key: 'test',
                     }
                 }).then( (msg) => {
                     let page: IPage = this.props.page;
-                page.item[index].before[i] = "http://206.189.167.228/b/" + msg.data.id;
+                page.item[index].before.push("http://206.189.167.228/b/"+ msg.data.id) ;
+                console.log(msg.data.id);
+                console.log(msg.data.tags);
                 this.props.updatePage(page);
                 }).catch(function (msg) {
                     console.log(msg);
@@ -211,9 +214,35 @@ class Edit extends React.Component<IProps, {}> {
         };
 
         const addMutipleDuring = (fileList: string[]) => {
-            let page: IPage = this.props.page;
-            page.item[index].during.push(...fileList);
-            this.props.updatePage(page);
+            for(var i=0;i<fileList.length;i++){
+                const bitmap: Buffer = fs.readFileSync(fileList[i]);
+                const ext = Path.extname(fileList[i]).toLowerCase();
+                
+                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
+                // fd.append("image", fs.createReadStream(path));
+                // fd.append("tags", JSON.stringify(['ttt']));
+                // fd.append("key", 'test');
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags:this.props.page.address,
+                        key: 'test',
+                    }
+                }).then( (msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].during.push("http://206.189.167.228/b/"+ msg.data.id) ;
+                console.log(msg.data.id);
+                console.log(msg.data.tags);
+                this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
+                // mapBeforePicture(page.item[index].before[i],i);
+                // page.item[index].before.push(fileList[i]);
+                // this.props.updatePage(page);
+            }
         };
 
         const addDuring = () => {
@@ -223,9 +252,35 @@ class Edit extends React.Component<IProps, {}> {
         };
 
         const addMutipleAfter = (fileList: string[]) => {
-            let page: IPage = this.props.page;
-            page.item[index].after.push(...fileList);
-            this.props.updatePage(page);
+            for(var i=0;i<fileList.length;i++){
+                const bitmap: Buffer = fs.readFileSync(fileList[i]);
+                const ext = Path.extname(fileList[i]).toLowerCase();
+                
+                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
+                // fd.append("image", fs.createReadStream(path));
+                // fd.append("tags", JSON.stringify(['ttt']));
+                // fd.append("key", 'test');
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags: this.props.page.address,
+                        key: 'test',
+                    }
+                }).then((msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].after.push("http://206.189.167.228/b/"+ msg.data.id);
+                console.log(msg.data.id);
+                //console.log(msg.data.tags);
+                this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
+                // mapBeforePicture(page.item[index].before[i],i);
+                // page.item[index].before.push(fileList[i]);
+                // this.props.updatePage(page);
+            }
         };
 
         const addAfter = () => {
@@ -249,7 +304,7 @@ class Edit extends React.Component<IProps, {}> {
                     url: "http://206.189.167.228/m/base64",
                     data: {
                         image: base64,
-                        tags: ['test', 'INVOICE-123798127398'],
+                        tags: this.props.page.address,
                         key: 'test',
                     }
                 }).then( (msg) => {
@@ -289,7 +344,7 @@ class Edit extends React.Component<IProps, {}> {
                     url: "http://206.189.167.228/m/base64",
                     data: {
                         image: base64,
-                        tags: ['test', 'INVOICE-123798127398'],
+                        tags: this.props.page.address,
                         key: 'test',
                     }
                 }).then( (msg) => {
@@ -328,7 +383,7 @@ class Edit extends React.Component<IProps, {}> {
                     url: "http://206.189.167.228/m/base64",
                     data: {
                         image: base64,
-                        tags: ['test', 'INVOICE-123798127398'],
+                        tags: this.props.page.address,
                         key: 'test',
                     }
                 }).then( (msg) => {
