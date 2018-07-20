@@ -58,9 +58,10 @@ class Edit extends React.Component<IProps, {}> {
             <div className="inputs">
                 <TextField
                     fullWidth
-                    label="Invoice Number"
+                    label="Invoice Number/ Key Code and Lock Box Number"
                     className="inputs"
                     margin="dense"
+                    multiline
                     value={this.props.page.invoice}
                     onChange={(event) => {
                         let page: IPage = this.props.page;
@@ -72,7 +73,7 @@ class Edit extends React.Component<IProps, {}> {
                 <TextField
                     fullWidth
                     className="inputs"
-                    label="Bill To"
+                    label="Bill To/ Upload Link/ Note"
                     margin="dense"
                     value={this.props.page.billTo}
                     multiline
@@ -113,13 +114,14 @@ class Edit extends React.Component<IProps, {}> {
                         this.props.updatePage(page);
                     }} />
             </div>
-            {/*
+            <div className="inputs">
             <TextField
                 fullWidth
                 className="inputs"
                 type="date"
                 label="Invoice Date"
                 margin="dense"
+                value={this.props.page.invoiceDate}
                 InputLabelProps={{
                     shrink: true,
                 }}
@@ -127,7 +129,8 @@ class Edit extends React.Component<IProps, {}> {
                     let page: IPage = this.props.page;
                     page.invoiceDate = event.target.value;
                     this.props.updatePage(page);
-                }} /> */}
+                }} /> 
+            </div>
             <div className="inputs">
                 <TextField
                     fullWidth
@@ -175,9 +178,36 @@ class Edit extends React.Component<IProps, {}> {
             this.props.updatePage(page);
         };
         const addMutipleBefore = (fileList: string[]) => {
-            let page: IPage = this.props.page;
-            page.item[index].before.push(...fileList);
-            this.props.updatePage(page);
+            console.log(fileList[0]);
+            // let page: IPage = this.props.page;
+            for(var i=0;i<fileList.length;i++){
+                const bitmap: Buffer = fs.readFileSync(fileList[i]);
+                const ext = Path.extname(fileList[i]).toLowerCase();
+                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
+                // fd.append("image", fs.createReadStream(path));
+                // fd.append("tags", JSON.stringify(['ttt']));
+                // fd.append("key", 'test');
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags: ['test', 'whatever'],
+                        key: 'test',
+                    }
+                }).then( (msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].before[i] = "http://206.189.167.228/b/" + msg.data.id;
+                this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
+                // mapBeforePicture(page.item[index].before[i],i);
+                // page.item[index].before.push(fileList[i]);
+                // this.props.updatePage(page);
+            }
+            // page.item[index].before.push(...fileList);
+            // this.props.updatePage(page);
         };
 
         const addMutipleDuring = (fileList: string[]) => {
@@ -251,9 +281,24 @@ class Edit extends React.Component<IProps, {}> {
 
         const mapDuringPicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
-                let page: IPage = this.props.page;
-                page.item[index].during[pictureIndex] = path;
+                const bitmap: Buffer = fs.readFileSync(path);
+                const ext = Path.extname(path).toLowerCase();
+                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags: ['test', 'INVOICE-123798127398'],
+                        key: 'test',
+                    }
+                }).then( (msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].during[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
                 this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
             };
 
             const deletePicture = () => {
@@ -275,9 +320,24 @@ class Edit extends React.Component<IProps, {}> {
 
         const mapAfterPicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
-                let page: IPage = this.props.page;
-                page.item[index].after[pictureIndex] = path;
+                const bitmap: Buffer = fs.readFileSync(path);
+                const ext = Path.extname(path).toLowerCase();
+                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
+                $.ajax({
+                    type: "POST",
+                    url: "http://206.189.167.228/m/base64",
+                    data: {
+                        image: base64,
+                        tags: ['test', 'INVOICE-123798127398'],
+                        key: 'test',
+                    }
+                }).then( (msg) => {
+                    let page: IPage = this.props.page;
+                page.item[index].after[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
                 this.props.updatePage(page);
+                }).catch(function (msg) {
+                    console.log(msg);
+                });
             };
 
             const deletePicture = () => {

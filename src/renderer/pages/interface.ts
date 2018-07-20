@@ -13,7 +13,7 @@ export interface IPage {
     billTo: string;
     address: string;
     completionDate: string;
-    invoiceDate: Date;
+    invoiceDate: string;
     item: IItem[];
     tax: number;
 }
