@@ -154,7 +154,8 @@ class Root extends React.Component<{}, IState> {
             billTo: '',
             address: '',
             completionDate: new Date().toString(),
-            invoiceDate: new Date(),
+            // invoiceDate: new Date(),
+            invoiceDate: new Date().toString(),
             item: [],
             tax: 0,
         };
@@ -237,7 +238,7 @@ class Root extends React.Component<{}, IState> {
                                 console.log(parsed);
                             }
 
-                            parsed.invoiceDate = new Date(parsed.invoiceDate);
+                             parsed.invoiceDate = new Date(parsed.invoiceDate).toString();
 
                             this.setState({
                                 page: parsed,
@@ -304,7 +305,8 @@ class Root extends React.Component<{}, IState> {
             billTo: '',
             address: '',
             completionDate: '',
-            invoiceDate: new Date(),
+            //invoiceDate: new Date(),
+            invoiceDate:'',
             item: [],
             tax: 0,
         };

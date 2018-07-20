@@ -13,8 +13,10 @@ import { IItem, IPage } from './interface';
 import * as fs from 'fs';
 import * as path from 'path';
 import logo from './logo';
+import rlogo from './repairbaseLogo';
 
-export type TMode = 'invoice' | 'workorder';
+// export type TMode = 'invoice' | 'workorder';
+export type TMode = 'invoice' | 'workorder'|"bid";
 
 export interface IProps {
     page: IPage;
@@ -61,8 +63,11 @@ class Show extends React.Component<IProps> {
         super(props);
         this.mapItem = this.mapItem.bind(this);
         this.change = this.change.bind(this);
-
+        this.showBaseLogo = this.showBaseLogo.bind(this);
         this.displayT = this.displayT.bind(this);
+        this.changeStage = this.changeStage.bind(this);
+        this.billChange = this.billChange.bind(this);
+        this.taxChange = this.taxChange.bind(this);
 
     }
 
@@ -95,10 +100,6 @@ class Show extends React.Component<IProps> {
                 //backgroundColor: this.state.mode === 'invoice' ? 'red' : 'blue',
                 alignItems: 'center',
             }}>
-                <img src={logo} alt="logo" style={{
-                    width: '70px',
-                    height: '50px',
-                }} />
                 <div style={{
                     flex: 1,
                     paddingLeft: '10px',
@@ -108,8 +109,11 @@ class Show extends React.Component<IProps> {
                     color: 'darkblue',
                     fontWeight: 'bold',
                 }}>
-                    Repair and Preservation Network, LLC
+                <div>
+                    {this.showBaseLogo()}
+                    </div>
                 </div>
+                
                 <div id="text status" style={{
                     width: '30%',
                     fontSize: '45px',
@@ -117,13 +121,38 @@ class Show extends React.Component<IProps> {
                     color: 'lightblue',
                     textAlign: 'center',
 
-                }}>{this.props.mode === 'invoice' ? "INVOICE" : "BID PHOTO"}</div>
+                }}>{this.changeStage()}</div>
+                
             </div>
-            <div style={{ display: 'flex' }}>
-                <div style={{ flex: 3 }}>
+            <div style={{ 
+                display: 'flex',
+                
+                }}>
+                
+                <img src={logo} alt="logo" style={{
+                    width: '70px',
+                    height: '60px',
+                }} />
+                
+                <div style={{ flex: 3,
+                    paddingLeft:'10px' ,
+                
+                }}>
+                <div style={{
+                    flex: 1,
+                    paddingTop:'20px',
+                    display: 'inline',
+                    fontSize: '20px',
+                    color: 'darkblue',
+                    fontWeight: 'bold',
+                }}>
+                    Document Presented by<br/>
+                    Repair and Preservation Network, LLC<br/>
+                </div>
                     10 Old Mamaroneck Road Unit 1A.<br />
                     White Plains, NY 10605<br />
                     Phone: (646)-568-0008
+                    
                 </div>
                 <div style={{ flex: 2 }}>
                     {this.displayT()}
@@ -137,7 +166,7 @@ class Show extends React.Component<IProps> {
             }}>
                 <thead>
                     <tr style={{ border: '3px solid black' }}>
-                        <th style={{ ...(s.th as any), width: "66%" }}>BILL TO</th>
+                        <th style={{ ...(s.th as any), width: "66%" }}>{this.billChange()}</th>
                         <th style={(s.th as any)}>ADDRESS</th>
                     </tr>
                 </thead>
@@ -167,27 +196,8 @@ class Show extends React.Component<IProps> {
                 </thead>
                 <tbody>
                     {this.props.page.item.map(this.mapItem)}
-                    <tr>
-                        <td style={(s.td as any)}>
-                            <div style={{
-                                padding: '3px',
-                            }}>
-                                HOA: Sales tax {this.props.page.tax ? this.props.page.tax : 0}%
-                            </div>
-                        </td>
-                        <td style={{
-                            ...(s.td as any),
-                            padding: '3px',
-                            fontWeight: 'bold',
-                        }}>
-                            <div style={{ display: 'flex' }}>
-                                <div>$</div>
-                                <div style={{ flex: 1, textAlign: 'right' }}>
-                                    {tax ? tax.toFixed(2) : 0}
-                                </div>
-                            </div>
-                        </td>
-                    </tr>
+                    {this.taxChange(tax)}
+                    
                     <tr>
                         <td style={(s.td as any)}>
                             <div style={{
@@ -226,6 +236,45 @@ class Show extends React.Component<IProps> {
         </div >);
     }
 
+    protected taxChange(tax){
+        if(this.props.mode!=='workorder'){
+            return(
+                <tr>
+                        <td style={(s.td as any)}>
+                            <div style={{
+                                padding: '3px',
+                            }}>
+                                HOA: Sales tax {this.props.page.tax ? this.props.page.tax : 0}%
+                            </div>
+                        </td>
+                        <td style={{
+                            ...(s.td as any),
+                            padding: '3px',
+                            fontWeight: 'bold',
+                        }}>
+                            <div style={{ display: 'flex' }}>
+                                <div>$</div>
+                                <div style={{ flex: 1, textAlign: 'right' }}>
+                                    {tax ? tax.toFixed(2) : 0}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+            );
+        }
+    }
+    protected billChange(){
+        if(this.props.mode==='invoice'){
+            return ("BILL TO");
+        }
+        else if(this.props.mode==='workorder'){
+            return ("UPLOAD LINK");
+        }
+        else{
+            return ("NOTE");
+        }
+    }
+
     protected parseDate(da: string | Date): string {
         let year: string;
         let month: string;
@@ -250,6 +299,14 @@ class Show extends React.Component<IProps> {
             day = '0' + day;
         }
         return `${month}/${day}/${year}`;
+    }
+    protected showBaseLogo(){
+        if(this.props.mode==='bid'){
+            return (<img src={rlogo} alt="logo" style={{
+                width: 'auto',
+                height: '80px',
+            }} />);
+        }
     }
 
     protected base64_encode(file: string): string {
@@ -285,11 +342,34 @@ class Show extends React.Component<IProps> {
         return imgSrcString;
     }
     protected change() {
-        this.props.upgradeMode(this.props.mode === 'invoice' ? 'workorder' : 'invoice');
+        // this.props.upgradeMode(this.props.mode === 'invoice' ? 'workorder' : 'invoice');
+        //var judge;
+        if(this.props.mode === 'invoice'){
+            this.props.upgradeMode('workorder');
+        }
+        else if(this.props.mode === 'workorder'){
+            this.props.upgradeMode('bid')
+        }
+        else{
+            this.props.upgradeMode('invoice');
+        }
         console.log(this.props.mode);
     }
 
+    protected changeStage(){
+        if(this.props.mode === 'invoice'){
+            return("INVOICE");
+        }
+        else if(this.props.mode === 'workorder'){
+            return("WORK ORDER");
+        }
+        else{
+            return("BID");
+        }
+    }
+
     protected displayT() {
+        
         if (this.props.mode === 'invoice') {
             return (<table style={{ width: '100%', borderCollapse: 'collapse' }}>
                 <tbody>
@@ -307,6 +387,7 @@ class Show extends React.Component<IProps> {
                     </td>
                         <td style={(s.td as any)}>
                             {this.parseDate(this.props.page.completionDate)}
+                            
                         </td>
 
                     </tr>
@@ -316,13 +397,51 @@ class Show extends React.Component<IProps> {
                     </td>
                         <td style={(s.td as any)}>
                             {this.parseDate(this.props.page.invoiceDate)}
+                            
                         </td>
                     </tr>
                 </tbody>
             </table>);
         }
+        else if(this.props.mode==='bid'){
+        }
+        else{
+                return (<table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                    <tbody>
+                        <tr>
+                            <td style={(s.td as any)}>
+                                Key Code
+                                Lock Box Number
+                        </td>
+                            <td style={(s.td as any)}>
+                                {this.props.page.invoice.split('\n')}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style={(s.td as any)}>
+                                Completion Date
+                        </td>
+                            <td style={(s.td as any)}>
+                                {this.parseDate(this.props.page.completionDate)}
+                                
+                            </td>
+    
+                        </tr>
+                        <tr>
+                            <td style={(s.td as any)}>
+                                Invoice Date
+                        </td>
+                            <td style={(s.td as any)}>
+                                {this.parseDate(this.props.page.invoiceDate)}
+                                
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>);
+        }
         return void 0;
     }
+    
 
     protected mapItem(value: IItem, index: number): JSX.Element {
         const mapPicture = (picture: string, pictureIndex: number) => {
