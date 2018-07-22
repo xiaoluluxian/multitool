@@ -448,6 +448,7 @@ class Show extends React.Component<IProps> {
     
 
     protected mapItem(value: IItem, index: number): JSX.Element {
+        let count = 0;
         const mapPicture = (picture: string, pictureIndex: number) => {
             if (!picture) {
                 return void 0;
@@ -456,16 +457,16 @@ class Show extends React.Component<IProps> {
                 flex: 1,
                 position: 'relative',
                 // minWidth: '33%',
-                minWidth: '220px',
-                maxWidth: '220px',
-                padding: '3px',
+                minWidth: '180px',
+                maxWidth: '180px',
+                padding: '2px',
                 //marginLeft:'20px',
                 //marginTop:'0px',
             }} >
                 <img
                     style={{
                         // position: 'static',
-                        width: '100%',
+                        width: '95%',
                         height: 'auto',
                         marginLeft:'3px',
                         //marginTop:'0px',
@@ -473,11 +474,13 @@ class Show extends React.Component<IProps> {
                     }}
                     src={this.base64_encode(picture)}
                 />
+                <div>{this.props.isPrint? void 0: ++count}</div>
+                
             </div>);
         };
 
         const buildPicture = (pictureE: string[]) => {
-
+           
             const picture = [...pictureE];
             let pictureList: any[] = [];
             let tempList: string[] = [];

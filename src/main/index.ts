@@ -170,6 +170,10 @@ ipcMain.on('save-page', (event: any, arg: string) => {
     });
 });
 
+ipcMain.on('save-to-pdf', (event: any, arg: string)=>{
+    
+});
+
 ipcMain.on('load-page', (event: any, arg: string) => {
     dialog.showOpenDialog(win, {
         title: 'Load page',

@@ -27,19 +27,6 @@ export interface IState {
     isMaximze: boolean;
 }
 
-let win: BrowserWindow;
-const createWindow: () => void = () => {
-    win = new BrowserWindow({
-        width: 1850,
-        height: 1020,
-        show: false,
-        frame: false,
-        backgroundColor: Config.backgroundColor,
-    });
-    win.loadURL(`file://${__dirname}/../../anotherone/index.html`);
-    win.webContents.openDevTools();
-}
-
 class Root extends React.Component<{}, IState> {
     private interval: any;
 
@@ -119,6 +106,7 @@ class Root extends React.Component<{}, IState> {
                     <Edit
                         page={this.state.page}
                         updatePage={this.updatePage}
+                        changeStatus={this.changeStatus}
                     />
                 </div>
                 <div className="show">

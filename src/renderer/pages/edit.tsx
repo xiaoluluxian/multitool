@@ -20,10 +20,12 @@ import MultiDropper from './multiDropper';
 import * as $ from 'jquery';
 import * as Path from 'path';
 import * as NodeFormData from 'form-data';
+import Markus from 'markus-sdk-node';
 
 export interface IProps {
     page: IPage;
     updatePage: (page: IPage, next?: () => void) => void;
+    changeStatus: (status: string) => void;
 }
 
 class Edit extends React.Component<IProps, {}> {
@@ -178,71 +180,41 @@ class Edit extends React.Component<IProps, {}> {
             this.props.updatePage(page);
         };
         const addMutipleBefore = (fileList: string[]) => {
-            console.log(fileList[0]);
-            // let page: IPage = this.props.page;
+            let bitmap = [];
             for(var i=0;i<fileList.length;i++){
-                const bitmap: Buffer = fs.readFileSync(fileList[i]);
-                const ext = Path.extname(fileList[i]).toLowerCase();
-                
-                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
-                // fd.append("image", fs.createReadStream(path));
-                // fd.append("tags", JSON.stringify(['ttt']));
-                // fd.append("key", 'test');
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags: this.props.page.address,
-                        key: 'test',
-                    }
-                }).then( (msg) => {
-                    let page: IPage = this.props.page;
-                page.item[index].before.push("http://206.189.167.228/b/"+ msg.data.id) ;
-                console.log(msg.data.id);
-                console.log(msg.data.tags);
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
-                });
-                // mapBeforePicture(page.item[index].before[i],i);
-                // page.item[index].before.push(fileList[i]);
-                // this.props.updatePage(page);
+                bitmap.push(fs.readFileSync(fileList[i]));
             }
-            // page.item[index].before.push(...fileList);
-            // this.props.updatePage(page);
+            console.log();
+            const markus = new Markus('http://206.189.167.228');
+            const length = fileList.length;
+            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+                this.props.changeStatus(`Upload ${count}/${length}`);
+            }, 'test').then((result)=>{
+                for(let i of result){
+                    let page = this.props.page;
+                    page.item[index].before.push("http://206.189.167.228/b/" + i.id);
+                    this.props.updatePage(page);
+                }
+            });
         };
 
         const addMutipleDuring = (fileList: string[]) => {
+            let bitmap = [];
             for(var i=0;i<fileList.length;i++){
-                const bitmap: Buffer = fs.readFileSync(fileList[i]);
-                const ext = Path.extname(fileList[i]).toLowerCase();
-                
-                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
-                // fd.append("image", fs.createReadStream(path));
-                // fd.append("tags", JSON.stringify(['ttt']));
-                // fd.append("key", 'test');
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags:this.props.page.address,
-                        key: 'test',
-                    }
-                }).then( (msg) => {
-                    let page: IPage = this.props.page;
-                page.item[index].during.push("http://206.189.167.228/b/"+ msg.data.id) ;
-                console.log(msg.data.id);
-                console.log(msg.data.tags);
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
-                });
-                // mapBeforePicture(page.item[index].before[i],i);
-                // page.item[index].before.push(fileList[i]);
-                // this.props.updatePage(page);
+                bitmap.push(fs.readFileSync(fileList[i]));
             }
+            console.log();
+            const markus = new Markus('http://206.189.167.228');
+            const length = fileList.length;
+            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+                this.props.changeStatus(`Upload ${count}/${length}`);
+            }, 'test').then((result)=>{
+                for(let i of result){
+                    let page = this.props.page;
+                    page.item[index].during.push("http://206.189.167.228/b/" + i.id);
+                    this.props.updatePage(page);
+                }
+            });
         };
 
         const addDuring = () => {
@@ -252,35 +224,22 @@ class Edit extends React.Component<IProps, {}> {
         };
 
         const addMutipleAfter = (fileList: string[]) => {
+            let bitmap = [];
             for(var i=0;i<fileList.length;i++){
-                const bitmap: Buffer = fs.readFileSync(fileList[i]);
-                const ext = Path.extname(fileList[i]).toLowerCase();
-                
-                const base64 = 'data:image/'+ext.substring(1,ext.length)+';base64,' + new Buffer(bitmap).toString('base64');
-                // fd.append("image", fs.createReadStream(path));
-                // fd.append("tags", JSON.stringify(['ttt']));
-                // fd.append("key", 'test');
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags: this.props.page.address,
-                        key: 'test',
-                    }
-                }).then((msg) => {
-                    let page: IPage = this.props.page;
-                page.item[index].after.push("http://206.189.167.228/b/"+ msg.data.id);
-                console.log(msg.data.id);
-                //console.log(msg.data.tags);
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
-                });
-                // mapBeforePicture(page.item[index].before[i],i);
-                // page.item[index].before.push(fileList[i]);
-                // this.props.updatePage(page);
+                bitmap.push(fs.readFileSync(fileList[i]));
             }
+            console.log();
+            const markus = new Markus('http://206.189.167.228');
+            const length = fileList.length;
+            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+                this.props.changeStatus(`Upload ${count}/${length}`);
+            }, 'test').then((result)=>{
+                for(let i of result){
+                    let page = this.props.page;
+                    page.item[index].after.push("http://206.189.167.228/b/" + i.id);
+                    this.props.updatePage(page);
+                }
+            });
         };
 
         const addAfter = () => {
@@ -291,30 +250,13 @@ class Edit extends React.Component<IProps, {}> {
 
         const mapBeforePicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
-                // const fd = new NodeFormData();
                 const bitmap: Buffer = fs.readFileSync(path);
-                const ext = Path.extname(path).toLowerCase();
-                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
-                // fd.append("image", fs.createReadStream(path));
-                // fd.append("tags", JSON.stringify(['ttt']));
-                // fd.append("key", 'test');
-
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags: this.props.page.address,
-                        key: 'test',
-                    }
-                }).then( (msg) => {
+                const markus = new Markus('http://206.189.167.228');
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
                     let page: IPage = this.props.page;
-                page.item[index].before[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
+                    page.item[index].before[pictureIndex] = "http://206.189.167.228/b/" + result.id;
+                    this.props.updatePage(page);
                 });
-                
             };
 
             const deletePicture = () => {
@@ -323,6 +265,7 @@ class Edit extends React.Component<IProps, {}> {
                 this.props.updatePage(page);
             };
             return (<div className="ikka" key={pictureIndex}>
+            <div>{pictureIndex+1}</div>
                 <Dropper
                     onDrop={editPicture}
                     load={picture} />
