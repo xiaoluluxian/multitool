@@ -116,3 +116,8 @@ Use yours instead; also if the form name is changed, you have to change it in sr
 ### v1.5.4
 
 When user add pictures in invoice, the picture will upload to server and return picture ID
+
+### v1.5.5
+
+Optimize upload function, able to upload multiple picture at one time to server. 
+Different status for user to choose: BID, INVOICE, WORK ORDER

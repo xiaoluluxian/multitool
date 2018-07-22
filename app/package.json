@@ -1,6 +1,6 @@
 {
     "name": "rpn-multitool",
-    "version": "1.5.4",
+    "version": "1.5.5",
     "description": "invoice generator",
     "main": "main/bundle.js",
     "private": true,
