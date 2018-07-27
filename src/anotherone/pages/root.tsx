@@ -167,6 +167,9 @@ class Root extends React.Component<{}, IState> {
                 if (!pict.used) {
                     let realPath = path.join(filePath, pict.name);
 
+                    // 我不知道这个能不能用，我没有测试过
+
+
                     if (pict.name.substring(0, 1) === '1') {
                         this.inner.unused.Exterior.push({
                             name: removeExtName(pict.name),
