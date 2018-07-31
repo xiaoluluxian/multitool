@@ -14,6 +14,7 @@ import repairBaseLogo from './repairbaseLogo';
 import printToString, { Print } from './print';
 
 import Lunuh from '../components/lunuh';
+import * as $ from 'jquery';
 
 import * as fs from 'fs';
 import * as path from 'path';
@@ -474,6 +475,7 @@ export class Edit extends React.Component<IProps, {}> {
          * if this.props.isprint means use is printing this page who have full access to file:// protocol
          * If not, read the file ourself and return as base64 string
          */
+        if (file.substring(0, 4) === 'http') return file
         if (file.length < 1) {
             return '';
         }
@@ -505,7 +507,9 @@ export class Edit extends React.Component<IProps, {}> {
         if (!picture) {
             return void 0;
         }
-        return (<div key={pictureIndex} style={{
+        return (
+        <div key={pictureIndex} style={{
+            
             flex: 1,
             minWidth: '220px',
             maxWidth: '220px',
@@ -553,6 +557,7 @@ export class Edit extends React.Component<IProps, {}> {
                 tempList = [];
             }
             tempList.push(picture.shift());
+
         }
         if (tempList.length > 0) {
             pictureList.push(<tr key={key}>

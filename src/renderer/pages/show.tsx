@@ -151,7 +151,7 @@ class Show extends React.Component<IProps> {
                 </div>
                     10 Old Mamaroneck Road Unit 1A.<br />
                     White Plains, NY 10605<br />
-                    Phone: (646)-568-0008
+                    Phone: (866)-766-8880
                     
                 </div>
                 <div style={{ flex: 2 }}>
@@ -423,15 +423,15 @@ class Show extends React.Component<IProps> {
                         </tr>
                         <tr>
                             <td style={(s.td as any)}>
-                                Completion Date
+                                Due Date
                         </td>
                             <td style={(s.td as any)}>
-                                {this.parseDate(this.props.page.completionDate)}
+                                {this.parseDate(this.props.page.invoiceDate)}
                                 
                             </td>
     
                         </tr>
-                        <tr>
+                        {/* {<tr>
                             <td style={(s.td as any)}>
                                 Invoice Date
                         </td>
@@ -439,7 +439,7 @@ class Show extends React.Component<IProps> {
                                 {this.parseDate(this.props.page.invoiceDate)}
                                 
                             </td>
-                        </tr>
+                        </tr>} */}
                     </tbody>
                 </table>);
         }
@@ -475,6 +475,7 @@ class Show extends React.Component<IProps> {
                     src={this.base64_encode(picture)}
                 />
                 <div>{this.props.isPrint? void 0: ++count}</div>
+                <div>{this.props.page.item[index].description}</div>
                 
             </div>);
         };
