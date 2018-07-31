@@ -187,7 +187,7 @@ class Root extends React.Component<{}, IState> {
                 saveStatus: '',
             });
             this.mentionSave();
-        }, 2000);
+        }, 20000);
     }
 
     protected saveFile() {
@@ -216,10 +216,12 @@ class Root extends React.Component<{}, IState> {
         ipcRenderer.once('load-page-re', (event, arg) => {
             if (arg) {
                 if (arg.length > 0) {
+                    console.log(arg);
                     fs.readFile(arg[0], (err, content) => {
                         if (err) {
                             this.changeStatus('Error!');
                         } else {
+                            //console.log(content);
                             let parsed: IPage = JSON.parse(content.toString());
                             if (parsed.invoice===undefined) {
                                 parsed = this.iparsedToIPage((parsed as any));

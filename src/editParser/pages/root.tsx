@@ -21,6 +21,7 @@ import * as fs from 'fs';
 import * as path from 'path';
 import { cleanImageList, comparePictureName, getInner, removeExtName } from '../lambda/parser';
 import { availableDivider, IEach, IParsed } from './interface';
+import Markus from 'markus-sdk-node';
 
 export interface IState {
     mode: "drag" | "export";
@@ -166,24 +167,60 @@ class Root extends React.Component<{}, IState> {
             parsedList = cleanImageList(parsedList);
 
             inner.totalImage = parsedList.length;
-
+            const markus = new Markus('http://206.189.167.228');
+            let realPath;
+            let count = 0;
             for (let i of inner.list) {
                 for (let j of i.each) {
                     for (let pict of parsedList) {
                         if (comparePictureName(pict.name, i.cate, j.item, this.state.imageDevider)) {
-                            let realPath = path.join(filePath, pict.name);
-                            if (!j.image) {
-                                j.image = [];
-                            }
-                            pict.used = true;
-                            j.image.push({
-                                name: removeExtName(pict.name),
-                                src: realPath,
+                            const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
+                            markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
+                                //console.log(result);
+                                console.log(result.id);
+                                console.log(count++);
+                                console.log(pict.name);
+                                realPath = "http://206.189.167.228/b/" + result.id;
+                                console.log(realPath); 
+                                if (!j.image) {
+                                        j.image = [];
+                                    }
+                                    pict.used = true;
+                                    j.image.push({
+                                        name: removeExtName(pict.name),
+                                        src: realPath,
+                                    });
+                                    this.forceUpdate();
                             });
+                            // let realPath = path.join(filePath, pict.name);
+                            // if (!j.image) {
+                            //     j.image = [];
+                            // }
+                            // pict.used = true;
+                            // j.image.push({
+                            //     name: removeExtName(pict.name),
+                            //     src: realPath,
+                            // });
                         }
                     }
                 }
             }
+            //---------------------------------------------------------------------
+            // markus.UploadMultipleBuffer(parsedList.map((value) => {
+            //     const buffer = fs.readFileSync(path.join(filePath, value.name));
+            //     return buffer;
+            // }), 'prefix', '.jpeg', ['test', 'tag'], (count: number) => {
+            //      // 每上传一张就触发一次
+                 
+            //     console.log(count);
+            // }, 'test').then((result) => {
+            //     // 上传成功了
+            //     console.log(result);
+            // }).catch((err) => {
+            //     // 发生错误的时候触发
+            //     console.error(err);
+            // });
+            //--------------------------------------------------------------------
 
             for (let pict of parsedList) {
 

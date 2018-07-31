@@ -121,7 +121,7 @@ class Edit extends React.Component<IProps, {}> {
                 fullWidth
                 className="inputs"
                 type="date"
-                label="Invoice Date"
+                label="Invoice Date/ Due Date"
                 margin="dense"
                 value={this.props.page.invoiceDate}
                 InputLabelProps={{
@@ -388,6 +388,7 @@ class Edit extends React.Component<IProps, {}> {
                         fullWidth
                         className="inputs"
                         label="Description"
+                        multiline
                         value={value.description}
                         onChange={(event) => {
                             let page: IPage = this.props.page;
