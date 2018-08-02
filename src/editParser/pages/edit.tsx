@@ -15,10 +15,10 @@ import printToString, { Print } from './print';
 
 import Lunuh from '../components/lunuh';
 import * as $ from 'jquery';
-
+import * as os from 'os';
 import * as fs from 'fs';
 import * as path from 'path';
-import { ipcRenderer } from 'electron';
+import { ipcRenderer, BrowserWindow } from 'electron';
 
 export type TMode = 'invoice' | 'workorder';
 
@@ -335,8 +335,10 @@ export class Edit extends React.Component<IProps, {}> {
         if (picList.length <= 0) {
             return void 0;
         }
-
+        // console.log(picList);
+        // console.log(this.props.content);
         return (
+            
             <div>
                 <h3>{name}</h3>
                 <table
@@ -576,7 +578,14 @@ export class Edit extends React.Component<IProps, {}> {
     }
 
     protected saveFile() {
-        ipcRenderer.send('save-file', 'test', printToString(this.props.content, this.props.repairBaseId));
+        //ipcRenderer.send('save-file', 'test', printToString(this.props.content, this.props.repairBaseId));
+        // FIX - BAD PRACTICE, USE IMPORT INSTEAD
+        const dialog = require('electron').remote.dialog;
+        dialog.showSaveDialog({
+            defaultPath: path.join(os.homedir(), 'Desktop', 'test.pdf'),
+        }, (targetPath: string) => {
+            ipcRenderer.send('save-to-pdf', targetPath, printToString(this.props.content, this.props.repairBaseId));
+        });
     }
 
     protected mapStuff(value: IEach, index: number, category: string) {

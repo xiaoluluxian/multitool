@@ -170,8 +170,39 @@ ipcMain.on('save-page', (event: any, arg: string) => {
     });
 });
 
-ipcMain.on('save-to-pdf', (event: any, arg: string)=>{
-    
+ipcMain.on('save-to-pdf', (event: any, targetPath: string, content: string)=>{
+    let tempPath = path.join(os.tmpdir(), 'temp.html');
+    console.log(tempPath);
+     fs.writeFile(tempPath, content, (err1) => {
+        if (err1) {
+            console.log(err1);
+            return;
+        }
+         const tempWindow: BrowserWindow = new BrowserWindow({
+            show: false,
+        });
+        // TODO - Use load file instead
+        tempWindow.loadURL(`file://${tempPath}`);
+        const tempWeb = tempWindow.webContents;
+        tempWeb.on('did-finish-load', () => {
+            tempWeb.printToPDF({
+                printBackground: true,
+            }, (err: Error, data: Buffer) => {
+                fs.writeFile(targetPath, data, (pdfErr: Error) => {
+                    if (pdfErr) {
+                        console.log(pdfErr);
+                        return;
+                    }
+                     // TODO - Make this a function
+                    if (os.platform() === 'darwin') {
+                        shell.openExternal('file://' + targetPath);
+                    } else {
+                        shell.openExternal(targetPath);
+                    }
+                });
+            });
+        });
+    });
 });
 
 ipcMain.on('load-page', (event: any, arg: string) => {
