@@ -121,3 +121,8 @@ When user add pictures in invoice, the picture will upload to server and return 
 
 Optimize upload function, able to upload multiple picture at one time to server. 
 Different status for user to choose: BID, INVOICE, WORK ORDER
+
+### v1.5.6
+
+Upload picture by inport html.
+Local print method(faster than browser)

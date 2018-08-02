@@ -3,10 +3,10 @@
  * @fileoverview Root Route
  */
 
-import { ipcRenderer, app, BrowserWindow, dialog, Event, ipcMain, Menu, shell } from 'electron';
+import { ipcRenderer,webContents, app, BrowserWindow, dialog, Event, ipcMain, Menu, shell } from 'electron';
 import * as React from "react";
 import { renderToString } from 'react-dom/server';
-
+import * as os from 'os';
 
 import Config from "../../config/config";
 import createParser, { destroyParser } from "../../main/parser";
@@ -14,10 +14,10 @@ import createParser, { destroyParser } from "../../main/parser";
 
 import { IItem, IPage } from './interface';
 import { IParsed } from '../../editParser/pages/interface';
-
+import * as path from 'path';
 import Edit from './edit';
 import Show, { TMode } from './show';
-
+import { isIPv4 } from 'net';
 import * as fs from 'fs';
 
 export interface IState {
@@ -249,11 +249,27 @@ class Root extends React.Component<{}, IState> {
     }
 
     protected renderPicture() {
-        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} isPrint />));
+        //ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} isPrint />));
+        // FIX - BAD PRACTICE, USE IMPORT INSTEAD
+        const dialog = require('electron').remote.dialog;
+        dialog.showSaveDialog({
+            defaultPath: path.join(os.homedir(), 'Desktop', 'test.pdf'),
+        }, (targetPath: string) => {
+            
+                ipcRenderer.send('save-to-pdf', targetPath, renderToString((<Show page={this.state.page} mode={this.state.mode} isPrint />)))
+        
+            
+        });
     }
 
     protected renderNoPicture() {
-        ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} noPicture isPrint />));
+        //ipcRenderer.send('save-file', 'invoice-save', renderToString(<Show page={this.state.page} mode={this.state.mode} noPicture isPrint />));
+        const dialog = require('electron').remote.dialog;
+        dialog.showSaveDialog({
+            defaultPath: path.join(os.homedir(), 'Desktop', 'test.pdf'),
+        }, (targetPath: string) => {
+             ipcRenderer.send('save-to-pdf', targetPath, renderToString((<Show page={this.state.page} mode={this.state.mode} noPicture isPrint />)))
+        });
     }
 
     protected updatePage(page: IPage, next?: () => void) {
