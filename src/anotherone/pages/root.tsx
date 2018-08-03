@@ -21,6 +21,8 @@ import * as path from 'path';
 import { cleanImageList, comparePictureName, getInner, removeExtName } from '../lambda/parser';
 import { availableDivider, IEach, IParsed } from './interface';
 
+import Markus from 'markus-sdk-node';
+
 export interface IState {
     mode: "drag" | "export";
     filePath: string;
@@ -157,34 +159,54 @@ class Root extends React.Component<{}, IState> {
                 }
             }
 
-            for (let pict of parsedList) {
+            // 我不知道这个能不能用，我没有测试过
+            const markus = new Markus('你的服务器地址')
+            markus.UploadMultipleBuffer(parsedList.map((value) => {
+                const buffer = fs.readFileSync(path.join(filePath, value.name));
+                return buffer;
+            }), 'prefix', '.jpeg', ['test', 'tag'], (count: number) => {
 
-                // LOGGING
-                // console.log(pict);
-                if (path.extname(pict.name).toLowerCase() !== '.jpg' && path.extname(pict.name).toLowerCase() !== '.jpeg') {
-                    continue;
-                }
-                if (!pict.used) {
-                    let realPath = path.join(filePath, pict.name);
+                // 每上传一张就触发一次
+                console.log(count);
+            }, 'test').then((result) => {
+                // 上传成功了
+                console.log(result);
+            }).catch((err) => {
+                // 发生错误的时候触发
+                console.error(err);
+            });
 
-                    if (pict.name.substring(0, 1) === '1') {
-                        this.inner.unused.Exterior.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
-                    } else if (pict.name.substring(0, 1) === '2') {
-                        this.inner.unused.Interior.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
-                    } else {
-                        this.inner.unused.Other.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
-                    }
-                }
-            }
+            // 这之下的代码，想办法让他能获得文件名，来定位
+            // if (pict.name.substring(0, 1) === '1') {
+            //     this.inner.unused.Exterior.push({
+            //         name: removeExtName(pict.name),
+            //         src: realPath,
+            //     });
+            // } else if (pict.name.substring(0, 1) === '2') {
+            //     this.inner.unused.Interior.push({
+            //         name: removeExtName(pict.name),
+            //         src: realPath,
+            //     });
+            // } else {
+            //     this.inner.unused.Other.push({
+            //         name: removeExtName(pict.name),
+            //         src: realPath,
+            //     });
+            // }
+            // 以上
+
+            // for (let pict of parsedList) {
+
+            // // LOGGING
+            // // console.log(pict);
+            // if (path.extname(pict.name).toLowerCase() !== '.jpg' && path.extname(pict.name).toLowerCase() !== '.jpeg') {
+            //     continue;
+            // }
+            // if (!pict.used) {
+            //     let realPath = path.join(filePath, pict.name);
+            //    
+            // }
+            // }
 
             // for (let i of this.inner.list) {
             //     for (let j of i.each) {
