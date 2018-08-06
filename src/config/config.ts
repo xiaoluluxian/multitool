@@ -4,7 +4,7 @@
  */
 
 export default {
-    isDebug: false,
+    isDebug: true,
     backgroundColor: "white",
     version: "1.5.6",
     pageclipAPIKEY: 'api_1lTukXYBULhnVY9WAouliY2AMPhzlS0w',

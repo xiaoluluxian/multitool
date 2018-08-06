@@ -59,6 +59,7 @@ const s = {
 };
 
 class Show extends React.Component<IProps> {
+    count = 0;
     public constructor(props) {
         super(props);
         this.mapItem = this.mapItem.bind(this);
@@ -446,10 +447,11 @@ class Show extends React.Component<IProps> {
         return void 0;
     }
     
-
+    
     protected mapItem(value: IItem, index: number): JSX.Element {
-        let count = 0;
+        
         const mapPicture = (picture: string, pictureIndex: number) => {
+            this.count=this.count+1;
             if (!picture) {
                 return void 0;
             }
@@ -474,14 +476,14 @@ class Show extends React.Component<IProps> {
                     }}
                     src={this.base64_encode(picture)}
                 />
-                <div>{this.props.isPrint? void 0: ++count}</div>
+                <div>{this.props.isPrint? void 0: this.count}</div>
                 <div>{this.props.page.item[index].description}</div>
                 
             </div>);
         };
 
         const buildPicture = (pictureE: string[]) => {
-           
+            this.count=0;
             const picture = [...pictureE];
             let pictureList: any[] = [];
             let tempList: string[] = [];
@@ -566,11 +568,13 @@ class Show extends React.Component<IProps> {
             </td>
         </tr>
             {value.before.length > 0 ?
+            
                 <React.Fragment>
                     <tr>
                         <td style={(s.topDiv as any)} colSpan={2}>Before</td>
                     </tr>
                     {buildPicture(value.before)}
+                    
                 </React.Fragment>
                 : void 0}
             {value.during.length > 0 ?
