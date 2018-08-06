@@ -179,7 +179,7 @@ ipcMain.on('save-to-pdf', (event: any, targetPath: string, content: string)=>{
             return;
         }
          const tempWindow: BrowserWindow = new BrowserWindow({
-            show: false,
+            show: true,
         });
         // TODO - Use load file instead
         tempWindow.loadURL(`file://${tempPath}`);

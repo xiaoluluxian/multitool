@@ -310,7 +310,7 @@ export class Print extends React.Component<IProps, {}> {
                     width: '100%',
                     height: 'auto',
                 }}
-                src={path.resolve(picture.src)}
+                src={picture.src}
             />
         </div>);
     }
