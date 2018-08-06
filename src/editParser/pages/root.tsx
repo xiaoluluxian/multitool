@@ -183,22 +183,30 @@ class Root extends React.Component<{}, IState> {
                             const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
                             markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
                                 //console.log(result);
-                                // console.log(result.id);
+                                console.log(result.id);
                                 console.log(count++);
                                 console.log(pict.name);
                                 realPath = "http://206.189.167.228/b/" + result.id;
-                                // console.log(realPath); 
+                                console.log(realPath); 
+                                if (!j.image) {
+                                    j.image = [];
+                                }
+                                j.image.push({
+                                    name: removeExtName(pict.name),
+                                    src: realPath,
+                                });
+                                this.forceUpdate();
                                 
                             });
-                            if (!j.image) {
-                                j.image = [];
-                            }
+                            // if (!j.image) {
+                            //     j.image = [];
+                            // }
                             pict.used = true;
-                            j.image.push({
-                                name: removeExtName(pict.name),
-                                src: realPath,
-                            });
-                            this.forceUpdate();
+                            // j.image.push({
+                            //     name: removeExtName(pict.name),
+                            //     src: realPath,
+                            // });
+                            
                             // let realPath = path.join(filePath, pict.name);
                             // if (!j.image) {
                             //     j.image = [];
@@ -248,7 +256,12 @@ class Root extends React.Component<{}, IState> {
                             console.log(count++);
                             console.log(pict.name);
                             realPath = "http://206.189.167.228/b/" + result.id;
-                            // console.log(realPath); 
+                            // console.log(realPath);
+                            inner.unused.Exterior.push({
+                                name: removeExtName(pict.name),
+                                src: realPath,
+                            }); 
+                            this.forceUpdate();
                             
                         });
                         // const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
@@ -263,10 +276,7 @@ class Root extends React.Component<{}, IState> {
                         //             src: realPath,
                         //         });
                         //     });
-                        inner.unused.Exterior.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
+                        
                     } else if (pict.name.substring(0, 1) === '2') {
                         const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
                         markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
@@ -276,12 +286,15 @@ class Root extends React.Component<{}, IState> {
                             console.log(pict.name);
                             realPath = "http://206.189.167.228/b/" + result.id;
                             // console.log(realPath); 
+                            inner.unused.Interior.push({
+                                name: removeExtName(pict.name),
+                                src: realPath,
+                            });
+                            this.forceUpdate();
+                            
                             
                         });
-                        inner.unused.Interior.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
+                        
                     } else {
                         const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
                         markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
@@ -291,12 +304,13 @@ class Root extends React.Component<{}, IState> {
                             console.log(pict.name);
                             realPath = "http://206.189.167.228/b/" + result.id;
                             // console.log(realPath); 
-                            
+                            inner.unused.Other.push({
+                                name: removeExtName(pict.name),
+                                src: realPath,
+                            });
+                            this.forceUpdate();
                         });
-                        inner.unused.Other.push({
-                            name: removeExtName(pict.name),
-                            src: realPath,
-                        });
+                        
                     }
                 }
             }

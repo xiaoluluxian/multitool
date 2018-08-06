@@ -280,22 +280,11 @@ class Edit extends React.Component<IProps, {}> {
         const mapDuringPicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
                 const bitmap: Buffer = fs.readFileSync(path);
-                const ext = Path.extname(path).toLowerCase();
-                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags: this.props.page.address,
-                        key: 'test',
-                    }
-                }).then( (msg) => {
+                const markus = new Markus('http://206.189.167.228');
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
                     let page: IPage = this.props.page;
-                page.item[index].during[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
+                    page.item[index].during[pictureIndex] = "http://206.189.167.228/b/" + result.id;
+                    this.props.updatePage(page);
                 });
             };
 
@@ -305,6 +294,7 @@ class Edit extends React.Component<IProps, {}> {
                 this.props.updatePage(page);
             };
             return (<div className="ikka" key={pictureIndex} >
+            <div>{pictureIndex+1}</div>
                 <Dropper
                     onDrop={editPicture}
                     load={picture} />
@@ -319,22 +309,11 @@ class Edit extends React.Component<IProps, {}> {
         const mapAfterPicture = (picture: string, pictureIndex: number) => {
             const editPicture = (path: string) => {
                 const bitmap: Buffer = fs.readFileSync(path);
-                const ext = Path.extname(path).toLowerCase();
-                const base64 = 'data:image/jpeg;base64,' + new Buffer(bitmap).toString('base64');
-                $.ajax({
-                    type: "POST",
-                    url: "http://206.189.167.228/m/base64",
-                    data: {
-                        image: base64,
-                        tags: this.props.page.address,
-                        key: 'test',
-                    }
-                }).then( (msg) => {
+                const markus = new Markus('http://206.189.167.228');
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
                     let page: IPage = this.props.page;
-                page.item[index].after[pictureIndex] = "http://206.189.167.228/b/" + msg.data.id;
-                this.props.updatePage(page);
-                }).catch(function (msg) {
-                    console.log(msg);
+                    page.item[index].after[pictureIndex] = "http://206.189.167.228/b/" + result.id;
+                    this.props.updatePage(page);
                 });
             };
 
@@ -345,6 +324,7 @@ class Edit extends React.Component<IProps, {}> {
             };
 
             return (<div className="ikka" key={pictureIndex} >
+            <div>{pictureIndex+1}</div>
                 <Dropper
                     onDrop={editPicture}
                     load={picture} />
