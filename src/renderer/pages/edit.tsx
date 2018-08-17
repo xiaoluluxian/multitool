@@ -187,7 +187,7 @@ class Edit extends React.Component<IProps, {}> {
             console.log();
             const markus = new Markus('http://206.189.167.228');
             const length = fileList.length;
-            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+            markus.UploadMultipleBuffer(bitmap, this.props.page.address, 'jpeg', [this.props.page.address], (count)=>{
                 this.props.changeStatus(`Upload ${count}/${length}`);
             }, 'test').then((result)=>{
                 for(let i of result){
@@ -206,7 +206,7 @@ class Edit extends React.Component<IProps, {}> {
             console.log();
             const markus = new Markus('http://206.189.167.228');
             const length = fileList.length;
-            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+            markus.UploadMultipleBuffer(bitmap, this.props.page.address, 'jpeg', [this.props.page.address], (count)=>{
                 this.props.changeStatus(`Upload ${count}/${length}`);
             }, 'test').then((result)=>{
                 for(let i of result){
@@ -231,7 +231,7 @@ class Edit extends React.Component<IProps, {}> {
             console.log();
             const markus = new Markus('http://206.189.167.228');
             const length = fileList.length;
-            markus.UploadMultipleBuffer(bitmap, 'test', 'jpeg', [this.props.page.address], (count)=>{
+            markus.UploadMultipleBuffer(bitmap, this.props.page.address, 'jpeg', [this.props.page.address], (count)=>{
                 this.props.changeStatus(`Upload ${count}/${length}`);
             }, 'test').then((result)=>{
                 for(let i of result){
@@ -252,7 +252,7 @@ class Edit extends React.Component<IProps, {}> {
             const editPicture = (path: string) => {
                 const bitmap: Buffer = fs.readFileSync(path);
                 const markus = new Markus('http://206.189.167.228');
-                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', [this.props.page.address], 'test').then((result)=>{
                     let page: IPage = this.props.page;
                     page.item[index].before[pictureIndex] = "http://206.189.167.228/b/" + result.id;
                     this.props.updatePage(page);
@@ -281,7 +281,7 @@ class Edit extends React.Component<IProps, {}> {
             const editPicture = (path: string) => {
                 const bitmap: Buffer = fs.readFileSync(path);
                 const markus = new Markus('http://206.189.167.228');
-                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', [this.props.page.address], 'test').then((result)=>{
                     let page: IPage = this.props.page;
                     page.item[index].during[pictureIndex] = "http://206.189.167.228/b/" + result.id;
                     this.props.updatePage(page);
@@ -310,7 +310,7 @@ class Edit extends React.Component<IProps, {}> {
             const editPicture = (path: string) => {
                 const bitmap: Buffer = fs.readFileSync(path);
                 const markus = new Markus('http://206.189.167.228');
-                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', ['maybe'], 'test').then((result)=>{
+                markus.UploadSingleBuffer(bitmap, 'pasda.jpg', [this.props.page.address], 'test').then((result)=>{
                     let page: IPage = this.props.page;
                     page.item[index].after[pictureIndex] = "http://206.189.167.228/b/" + result.id;
                     this.props.updatePage(page);

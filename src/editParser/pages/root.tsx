@@ -181,7 +181,7 @@ class Root extends React.Component<{}, IState> {
                         if (comparePictureName(pict.name, i.cate, j.item, this.state.imageDevider)) {
                             let realPath = path.join(filePath, pict.name);
                             const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
-                            markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
+                            markus.UploadSingleBuffer(bitmap, 'jpeg', [this.state.inner.address], 'test').then((result)=>{
                                 //console.log(result);
                                 console.log(result.id);
                                 console.log(count++);
@@ -250,7 +250,7 @@ class Root extends React.Component<{}, IState> {
 
                     if (pict.name.substring(0, 1) === '1') {
                         const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
-                        markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
+                        markus.UploadSingleBuffer(bitmap, 'jpeg', [this.state.inner.address], 'test').then((result)=>{
                             //console.log(result);
                             // console.log(result.id);
                             console.log(count++);
@@ -279,7 +279,7 @@ class Root extends React.Component<{}, IState> {
                         
                     } else if (pict.name.substring(0, 1) === '2') {
                         const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
-                        markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
+                        markus.UploadSingleBuffer(bitmap, 'jpeg', [this.state.inner.address], 'test').then((result)=>{
                             //console.log(result);
                             // console.log(result.id);
                             console.log(count++);
@@ -297,7 +297,7 @@ class Root extends React.Component<{}, IState> {
                         
                     } else {
                         const bitmap: Buffer = fs.readFileSync(path.join(filePath, pict.name));
-                        markus.UploadSingleBuffer(bitmap, 'jpeg', ['maybe'], 'test').then((result)=>{
+                        markus.UploadSingleBuffer(bitmap, 'jpeg', [this.state.inner.address], 'test').then((result)=>{
                             //console.log(result);
                             // console.log(result.id);
                             console.log(count++);

@@ -11,7 +11,7 @@
     "scripts": {
         "start": "webpack-dev-server --config webpack/webpack.dev.js",
         "start:parser": "webpack-dev-server --config webpack/webpack.dev.parser.js",
-        "start:editparser": "webpack-dev-server --config webpack/webpack.dev.editParser.js",
+        "start:editparser": "webpack-dev-server --config webpack/webpack.dev.editparser.js",
         "build": "webpack --config webpack/webpack.config.editparser.js &&webpack --config webpack/webpack.config.parser.js &&webpack --config webpack/webpack.config.js && webpack --config webpack/webpack.main.js && cd app && electron-builder",
         "electron": "webpack --config webpack/webpack.main.dev.js && electron app",
         "renderer": "webpack --config webpack/webpack.config.js",
